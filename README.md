@@ -14,10 +14,10 @@ top panel. As usage climbs, the beacon changes shape and color:
 
 | Beacon | Meaning |
 |:---:|---|
-| <img src="assets/icons/pharos-symbolic.svg" width="22" alt="clear water"> | **Clear water** — below 50% |
-| <img src="assets/icons/pharos-caution-symbolic.svg" width="22" alt="light on the horizon"> | **Light on the horizon** — 50% |
-| <img src="assets/icons/pharos-warning-symbolic.svg" width="22" alt="full beam"> | **Full beam** — 75% |
-| <img src="assets/icons/pharos-critical-symbolic.svg" width="22" alt="on the rocks"> | **On the rocks** — 90% |
+| <img src="assets/assets/pharos-state-ok.svg" width="22" alt="clear water"> | **Clear water** — below 50% |
+| <img src="assets/assets/pharos-state-caution.svg" width="22" alt="light on the horizon"> | **Light on the horizon** — 50% |
+| <img src="assets/assets/pharos-state-warning.svg" width="22" alt="full beam"> | **Full beam** — 75% |
+| <img src="assets/assets/pharos-state-critical.svg" width="22" alt="on the rocks"> | **On the rocks** — 90% |
 
 ## Install
 
