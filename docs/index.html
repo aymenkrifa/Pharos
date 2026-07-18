@@ -218,15 +218,14 @@
     this machine — Pharos reads the sign-in Claude Code already has.</p>
     <ol class="steps">
       <li>
-        <b>Copy Pharos into place</b>
-        <p>Open a terminal and paste this — it downloads Pharos and puts it where
-        GNOME looks for extensions.</p>
-        <pre><button class="copy" data-copy>Copy</button><code>git clone https://github.com/aymenkrifa/Pharos.git
-cd Pharos
-glib-compile-schemas schemas/
-EXT=~/.local/share/gnome-shell/extensions/pharos@aymenkrifa.github.io
-mkdir -p "$EXT"
-cp -r extension.js prefs.js lib metadata.json stylesheet.css schemas assets "$EXT/"</code></pre>
+        <b>Get the beacon</b>
+        <p>Open a terminal and paste this — it downloads the latest release and
+        installs it for your user.</p>
+        <pre><button class="copy" data-copy>Copy</button><code>curl -LO https://github.com/aymenkrifa/Pharos/releases/latest/download/pharos@aymenkrifa.github.io.shell-extension.zip
+gnome-extensions install pharos@aymenkrifa.github.io.shell-extension.zip</code></pre>
+        <p>Prefer source? Clone
+        <a href="https://github.com/aymenkrifa/Pharos">the repo</a> and run
+        <code>./install.sh</code>.</p>
       </li>
       <li>
         <b>Reload GNOME Shell</b>

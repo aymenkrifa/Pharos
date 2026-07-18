@@ -25,14 +25,12 @@ Needs GNOME Shell 46–48 and
 [Claude Code](https://claude.com/product/claude-code) signed in on your
 machine.
 
-```sh
-git clone https://github.com/aymenkrifa/Pharos.git
-cd Pharos
-glib-compile-schemas schemas/
+Download the [latest release](https://github.com/aymenkrifa/Pharos/releases/latest)
+and install it:
 
-EXT=~/.local/share/gnome-shell/extensions/pharos@aymenkrifa.github.io
-mkdir -p "$EXT"
-cp -r extension.js prefs.js lib metadata.json stylesheet.css schemas assets "$EXT/"
+```sh
+curl -LO https://github.com/aymenkrifa/Pharos/releases/latest/download/pharos@aymenkrifa.github.io.shell-extension.zip
+gnome-extensions install pharos@aymenkrifa.github.io.shell-extension.zip
 ```
 
 Reload GNOME Shell (X11: `Alt+F2`, `r`, `Enter` — Wayland: log out and back
@@ -41,6 +39,19 @@ in), then:
 ```sh
 gnome-extensions enable pharos@aymenkrifa.github.io
 ```
+
+<details>
+<summary>Install from source instead</summary>
+
+```sh
+git clone https://github.com/aymenkrifa/Pharos.git
+cd Pharos
+./install.sh
+```
+
+Then reload and enable as above.
+
+</details>
 
 ## Accounts
 
