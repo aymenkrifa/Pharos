@@ -4,7 +4,7 @@
     <img src="assets/assets/pharos-logo-light.svg" alt="Pharos" width="540">
   </picture>
   <p><em>Your Claude 5-hour and 7-day usage limits, in the GNOME top panel.</em></p>
-  <p><a href="https://aymenkrifa.github.io/Pharos/"><b>Website</b></a></p>
+  <p><a href="https://pharos.aymenkrifa.com"><b>pharos.aymenkrifa.com</b></a></p>
 </div>
 
 # Pharos
