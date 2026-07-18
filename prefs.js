@@ -156,6 +156,31 @@ export default class PharosPrefs extends ExtensionPreferences {
             rebuild();
         });
 
+        // About
+        const about = new Adw.PreferencesGroup({ title: 'About' });
+
+        const author = new Adw.ActionRow({
+            title: 'Made by Aymen Krifa',
+            subtitle: 'aymenkrifa.com',
+            activatable: true,
+        });
+        author.add_suffix(new Gtk.Image({ icon_name: 'adw-external-link-symbolic' }));
+        author.connect('activated', () =>
+            Gtk.show_uri(window, 'https://aymenkrifa.com', 0));
+        about.add(author);
+
+        const source = new Adw.ActionRow({
+            title: 'Source code',
+            subtitle: this.metadata.url,
+            activatable: true,
+        });
+        source.add_suffix(new Gtk.Image({ icon_name: 'adw-external-link-symbolic' }));
+        source.connect('activated', () =>
+            Gtk.show_uri(window, this.metadata.url, 0));
+        about.add(source);
+
+        page.add(about);
+
         window.add(page);
     }
 }
