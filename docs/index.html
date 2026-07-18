@@ -25,16 +25,16 @@
     color-scheme: dark;
   }
   :root[data-theme="light"] {
-    --bg: var(--stone); --card: rgba(255,255,255,.5);
-    --text: var(--night); --muted: var(--sea);
-    --line: rgba(22,35,63,.22); --link: var(--sea);
+    --bg: var(--stone); --card: rgba(255,255,255,.55);
+    --text: var(--night); --muted: rgba(22,35,63,.62);
+    --line: rgba(22,35,63,.22); --link: var(--ember);
     color-scheme: light;
   }
   @media (prefers-color-scheme: light) {
     :root:not([data-theme="dark"]) {
-      --bg: var(--stone); --card: rgba(255,255,255,.5);
-      --text: var(--night); --muted: var(--sea);
-      --line: rgba(22,35,63,.22); --link: var(--sea);
+      --bg: var(--stone); --card: rgba(255,255,255,.55);
+      --text: var(--night); --muted: rgba(22,35,63,.62);
+      --line: rgba(22,35,63,.22); --link: var(--ember);
       color-scheme: light;
     }
   }
@@ -62,9 +62,11 @@
 
   #theme-toggle {
     position: fixed; top: 16px; right: 16px; z-index: 10;
-    width: 40px; height: 40px; border-radius: 50%;
+    padding: 9px 16px; border-radius: 10px;
     border: 1px solid var(--line); background: var(--card); color: var(--text);
-    font-size: 1.05rem; cursor: pointer; line-height: 1;
+    font-family: 'Marcellus', Georgia, serif; font-size: .82rem;
+    letter-spacing: .1em; text-transform: uppercase;
+    cursor: pointer; line-height: 1;
   }
   #theme-toggle:hover { border-color: var(--muted); }
 
@@ -290,7 +292,8 @@ cp -r extension.js prefs.js lib metadata.json stylesheet.css schemas assets "$EX
   const toggle = document.getElementById('theme-toggle');
   const mq = matchMedia('(prefers-color-scheme: light)');
   const effective = () => root.dataset.theme ?? (mq.matches ? 'light' : 'dark');
-  const paint = () => { toggle.textContent = effective() === 'light' ? '☾' : '☀'; };
+  // The label names the mode you'd switch TO.
+  const paint = () => { toggle.textContent = effective() === 'light' ? '☾ Dark' : '☀ Light'; };
   paint();
   toggle.addEventListener('click', () => {
     const next = effective() === 'light' ? 'dark' : 'light';
