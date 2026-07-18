@@ -127,19 +127,21 @@
   }
   ol.steps li b { font-family:'Marcellus', Georgia, serif; font-weight: 400; letter-spacing: .05em; }
   ol.steps li p { color: var(--muted); font-size: .97rem; margin-top: 3px; }
-  /* terminal blocks stay dark in both themes — that's what a terminal looks like */
+  /* terminal blocks stay dark in both themes — that's what a terminal looks like.
+     The copy button lives on a non-scrolling wrapper so it stays pinned at the
+     visible corner while the code scrolls sideways underneath it. */
+  .codeblock { position: relative; margin-top: 12px; }
   pre {
-    margin-top: 12px; background: var(--code-bg); border: 1px solid rgba(234,224,200,.14);
+    background: var(--code-bg); border: 1px solid rgba(234,224,200,.14);
     border-radius: 8px; padding: 15px 17px; overflow-x: auto;
     font: 13.5px/1.65 'JetBrains Mono', 'Fira Mono', monospace; color: var(--stone);
-    position: relative;
   }
-  pre .copy {
+  .codeblock .copy {
     position: absolute; top: 8px; right: 8px; border: 1px solid rgba(234,224,200,.25);
-    background: transparent; color: var(--stone-s); border-radius: 6px;
+    background: var(--code-bg); color: var(--stone-s); border-radius: 6px;
     font: 11px 'Cantarell', sans-serif; padding: 4px 10px; cursor: pointer;
   }
-  pre .copy:hover { color: var(--stone); border-color: var(--stone-s); }
+  .codeblock .copy:hover { color: var(--stone); border-color: var(--stone-s); }
   code { color: var(--link); }
   pre code { color: inherit; }
   .req { margin-top: 16px; color: var(--muted); font-size: .95rem; }
@@ -221,8 +223,8 @@
         <b>Get the beacon</b>
         <p>Open a terminal and paste this — it downloads the latest release and
         installs it for your user.</p>
-        <pre><button class="copy" data-copy>Copy</button><code>curl -LO https://github.com/aymenkrifa/Pharos/releases/latest/download/pharos@aymenkrifa.github.io.shell-extension.zip
-gnome-extensions install pharos@aymenkrifa.github.io.shell-extension.zip</code></pre>
+        <div class="codeblock"><button class="copy" data-copy>Copy</button><pre><code>curl -LO https://github.com/aymenkrifa/Pharos/releases/latest/download/pharos@aymenkrifa.github.io.shell-extension.zip
+gnome-extensions install pharos@aymenkrifa.github.io.shell-extension.zip</code></pre></div>
         <p>Prefer source? Clone
         <a href="https://github.com/aymenkrifa/Pharos">the repo</a> and run
         <code>./install.sh</code>.</p>
@@ -235,7 +237,7 @@ gnome-extensions install pharos@aymenkrifa.github.io.shell-extension.zip</code><
       <li>
         <b>Light the beacon</b>
         <p>Turn Pharos on — once is enough:</p>
-        <pre><button class="copy" data-copy>Copy</button><code>gnome-extensions enable pharos@aymenkrifa.github.io</code></pre>
+        <div class="codeblock"><button class="copy" data-copy>Copy</button><pre><code>gnome-extensions enable pharos@aymenkrifa.github.io</code></pre></div>
         <p>…or flip the switch in the Extensions app. The tower appears in your
         top panel right away.</p>
       </li>
