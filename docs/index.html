@@ -8,27 +8,70 @@
 <link rel="icon" href="pharos-mark.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Marcellus&display=swap" rel="stylesheet">
+<script>
+  // Apply the stored theme before first paint to avoid a flash.
+  const t = localStorage.getItem('pharos-theme');
+  if (t) document.documentElement.dataset.theme = t;
+</script>
 <style>
   :root {
     --night:#16233F; --night-2:#0F1930; --stone:#EAE0C8; --stone-s:#C9B48C;
     --gold:#F2A93B; --ember:#E07B39; --rocks:#D64541; --sea:#22375C;
+    /* semantic tokens — dark by default */
+    --bg: var(--night-2); --card: var(--night);
+    --text: var(--stone); --muted: var(--stone-s);
+    --line: rgba(234,224,200,.14); --code-bg: #0b0f18;
+    --link: var(--gold);
+    color-scheme: dark;
   }
+  :root[data-theme="light"] {
+    --bg: var(--stone); --card: rgba(255,255,255,.5);
+    --text: var(--night); --muted: var(--sea);
+    --line: rgba(22,35,63,.22); --link: var(--sea);
+    color-scheme: light;
+  }
+  @media (prefers-color-scheme: light) {
+    :root:not([data-theme="dark"]) {
+      --bg: var(--stone); --card: rgba(255,255,255,.5);
+      --text: var(--night); --muted: var(--sea);
+      --line: rgba(22,35,63,.22); --link: var(--sea);
+      color-scheme: light;
+    }
+  }
+
+  /* theme-dependent image swaps */
+  .only-light { display: none; }
+  :root[data-theme="light"] .only-dark { display: none; }
+  :root[data-theme="light"] .only-light { display: inline-block; }
+  @media (prefers-color-scheme: light) {
+    :root:not([data-theme="dark"]) .only-dark { display: none; }
+    :root:not([data-theme="dark"]) .only-light { display: inline-block; }
+  }
+
   * { box-sizing:border-box; margin:0; }
   html { scroll-behavior:smooth; }
   body {
-    background:var(--night-2); color:var(--stone);
+    background:var(--bg); color:var(--text);
     font: 17px/1.65 Georgia, 'Times New Roman', serif;
   }
   h1,h2,h3 { font-family:'Marcellus', Georgia, serif; font-weight:400; letter-spacing:.08em; }
   h2 { font-size: 1.5rem; text-transform: uppercase; letter-spacing: .14em; }
-  a { color: var(--gold); text-decoration: none; }
+  a { color: var(--link); text-decoration: none; }
   a:hover { text-decoration: underline; }
   main { max-width: 880px; margin: 0 auto; padding: 0 24px 80px; }
 
+  #theme-toggle {
+    position: fixed; top: 16px; right: 16px; z-index: 10;
+    width: 40px; height: 40px; border-radius: 50%;
+    border: 1px solid var(--line); background: var(--card); color: var(--text);
+    font-size: 1.05rem; cursor: pointer; line-height: 1;
+  }
+  #theme-toggle:hover { border-color: var(--muted); }
+
   .hero { padding: 72px 0 48px; text-align: center;
-          border-bottom: 1px solid rgba(234,224,200,.14); }
+          border-bottom: 1px solid var(--line); }
   .hero img.lockup { max-width: 560px; width: 100%; height: auto; }
-  .hero p.tag { margin-top: 22px; color: var(--stone-s); font-style: italic; font-size: 1.1rem; }
+  .hero p.tag { margin-top: 22px; color: var(--muted); font-style: italic; font-size: 1.1rem; }
   .hero p.what { margin: 14px auto 0; max-width: 560px; }
   .cta { margin-top: 30px; display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
   .cta a {
@@ -38,21 +81,21 @@
   }
   .cta a.primary { background: var(--gold); color: var(--night-2); }
   .cta a.primary:hover { text-decoration: none; filter: brightness(1.07); }
-  .cta a.ghost { border: 1px solid rgba(234,224,200,.35); color: var(--stone); }
-  .cta a.ghost:hover { text-decoration: none; border-color: var(--stone-s); }
+  .cta a.ghost { border: 1px solid var(--line); color: var(--text); }
+  .cta a.ghost:hover { text-decoration: none; border-color: var(--muted); }
 
-  /* simulated top bar */
+  /* simulated top bar — the GNOME bar is dark chrome in both themes */
   .panel-demo { margin: 44px auto 0; max-width: 560px; }
   .panel-demo .bar {
     background: #0b0f18; border-radius: 8px; padding: 8px 16px;
     display: flex; justify-content: flex-end; align-items: center; gap: 7px;
     font: 13px/1 'Cantarell', 'Segoe UI', sans-serif; color: var(--gold);
-    border: 1px solid rgba(234,224,200,.12);
+    border: 1px solid var(--line);
   }
   .panel-demo .bar img { width: 17px; height: 17px; display: block; }
-  .panel-demo .caption { margin-top: 10px; color: var(--stone-s); font-size: .92rem; font-style: italic; }
+  .panel-demo .caption { margin-top: 10px; color: var(--muted); font-size: .92rem; font-style: italic; }
 
-  section { padding: 52px 0; border-bottom: 1px solid rgba(234,224,200,.14); }
+  section { padding: 52px 0; border-bottom: 1px solid var(--line); }
   section > p { max-width: 640px; }
   .lede { margin-top: 14px; }
 
@@ -60,29 +103,30 @@
   .states { margin-top: 30px; display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
   @media (max-width: 640px) { .states { grid-template-columns: 1fr; } }
   .state {
-    background: var(--night); border: 1px solid rgba(234,224,200,.12);
+    background: var(--card); border: 1px solid var(--line);
     border-radius: 10px; padding: 18px 20px; display: flex; gap: 16px; align-items: flex-start;
   }
   .state img { width: 30px; height: 30px; flex: none; margin-top: 3px; }
   .state b { font-family: 'Marcellus', Georgia, serif; font-weight: 400; letter-spacing: .06em;
              display: block; margin-bottom: 2px; }
-  .state .at { color: var(--stone-s); font-size: .85rem; }
-  .state p { font-size: .95rem; color: var(--stone-s); margin-top: 4px; }
+  .state .at { color: var(--muted); font-size: .85rem; }
+  .state p { font-size: .95rem; color: var(--muted); margin-top: 4px; }
 
   /* install */
   ol.steps { margin: 26px 0 0; padding: 0; list-style: none; counter-reset: step; }
   ol.steps li { counter-increment: step; padding: 18px 0 18px 58px; position: relative; }
-  ol.steps li + li { border-top: 1px dashed rgba(234,224,200,.14); }
+  ol.steps li + li { border-top: 1px dashed var(--line); }
   ol.steps li::before {
     content: counter(step); position: absolute; left: 6px; top: 20px;
-    width: 34px; height: 34px; border-radius: 50%; border: 1px solid var(--stone-s);
-    color: var(--stone-s); display: flex; align-items: center; justify-content: center;
+    width: 34px; height: 34px; border-radius: 50%; border: 1px solid var(--muted);
+    color: var(--muted); display: flex; align-items: center; justify-content: center;
     font-family: 'Marcellus', Georgia, serif; font-size: 1rem;
   }
   ol.steps li b { font-family:'Marcellus', Georgia, serif; font-weight: 400; letter-spacing: .05em; }
-  ol.steps li p { color: var(--stone-s); font-size: .97rem; margin-top: 3px; }
+  ol.steps li p { color: var(--muted); font-size: .97rem; margin-top: 3px; }
+  /* terminal blocks stay dark in both themes — that's what a terminal looks like */
   pre {
-    margin-top: 12px; background: #0b0f18; border: 1px solid rgba(234,224,200,.14);
+    margin-top: 12px; background: var(--code-bg); border: 1px solid rgba(234,224,200,.14);
     border-radius: 8px; padding: 15px 17px; overflow-x: auto;
     font: 13.5px/1.65 'JetBrains Mono', 'Fira Mono', monospace; color: var(--stone);
     position: relative;
@@ -93,25 +137,28 @@
     font: 11px 'Cantarell', sans-serif; padding: 4px 10px; cursor: pointer;
   }
   pre .copy:hover { color: var(--stone); border-color: var(--stone-s); }
-  code { color: var(--gold); }
+  code { color: var(--link); }
   pre code { color: inherit; }
-  .req { margin-top: 16px; color: var(--stone-s); font-size: .95rem; }
+  .req { margin-top: 16px; color: var(--muted); font-size: .95rem; }
 
   .note {
-    margin-top: 24px; background: var(--sea); border-radius: 10px; padding: 16px 20px;
-    font-size: .97rem;
+    margin-top: 24px; background: var(--sea); color: var(--stone);
+    border-radius: 10px; padding: 16px 20px; font-size: .97rem;
   }
   .note b { font-family:'Marcellus', Georgia, serif; font-weight:400; letter-spacing:.05em; }
+  .note code { color: var(--gold); }
 
-  footer { padding: 34px 0 10px; text-align: center; color: var(--stone-s); font-size: .9rem; }
+  footer { padding: 34px 0 10px; text-align: center; color: var(--muted); font-size: .9rem; }
   footer p + p { margin-top: 6px; }
 </style>
 </head>
 <body>
+<button id="theme-toggle" aria-label="Switch between dark and light mode">☀</button>
 <main>
 
   <div class="hero">
-    <img class="lockup" src="pharos-logo-dark.svg" alt="Pharos" width="560" height="159">
+    <img class="lockup only-dark" src="pharos-logo-dark.svg" alt="Pharos" width="560" height="159">
+    <img class="lockup only-light" src="pharos-logo-light.svg" alt="Pharos" width="560" height="159">
     <p class="tag">A colored light on the horizon, before you run onto the rocks.</p>
     <p class="what">Pharos keeps your Claude usage limits in view — quietly, from the
     GNOME top panel — so you're never surprised by "limit reached" mid-thought.</p>
@@ -136,7 +183,8 @@
     resets.</p>
     <div class="states">
       <div class="state">
-        <img src="pharos-state-ok.svg" alt="Tower with flame, untinted">
+        <img class="only-dark" src="pharos-state-ok.svg" alt="Tower with flame, untinted">
+        <img class="only-light" src="pharos-state-ok-light.svg" alt="Tower with flame, untinted">
         <div><b>Clear water</b> <span class="at">below 50%</span>
         <p>Sailing normally. The tower stands, the flame is lit.</p></div>
       </div>
@@ -156,7 +204,7 @@
         <p>The limit is upon you. The reset time is in the menu.</p></div>
       </div>
     </div>
-    <p style="margin-top:22px; color:var(--stone-s); font-size:.95rem;">
+    <p style="margin-top:22px; color:var(--muted); font-size:.95rem;">
     All three thresholds are adjustable in Settings.</p>
   </section>
 
@@ -224,6 +272,7 @@ cp -r extension.js prefs.js lib metadata.json stylesheet.css schemas assets "$EX
 
 </main>
 <script>
+  // Copy buttons
   for (const btn of document.querySelectorAll('button[data-copy]')) {
     btn.addEventListener('click', async () => {
       const code = btn.parentElement.querySelector('code');
@@ -234,6 +283,22 @@ cp -r extension.js prefs.js lib metadata.json stylesheet.css schemas assets "$EX
       } catch (_e) { /* clipboard unavailable; leave the button as-is */ }
     });
   }
+
+  // Theme toggle: follows the system preference until the visitor chooses,
+  // then remembers the choice.
+  const root = document.documentElement;
+  const toggle = document.getElementById('theme-toggle');
+  const mq = matchMedia('(prefers-color-scheme: light)');
+  const effective = () => root.dataset.theme ?? (mq.matches ? 'light' : 'dark');
+  const paint = () => { toggle.textContent = effective() === 'light' ? '☾' : '☀'; };
+  paint();
+  toggle.addEventListener('click', () => {
+    const next = effective() === 'light' ? 'dark' : 'light';
+    root.dataset.theme = next;
+    localStorage.setItem('pharos-theme', next);
+    paint();
+  });
+  mq.addEventListener('change', paint);
 </script>
 </body>
 </html>
