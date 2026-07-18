@@ -4,6 +4,7 @@
     <img src="assets/assets/pharos-logo-light.svg" alt="Pharos" width="540">
   </picture>
   <p><em>Your Claude 5-hour and 7-day usage limits, in the GNOME top panel.</em></p>
+  <p><a href="https://aymenkrifa.github.io/Pharos/"><b>Website</b></a></p>
 </div>
 
 # Pharos
@@ -14,11 +15,15 @@ climbs, the beacon changes shape and color:
 | Beacon | Meaning |
 |:---:|---|
 | <img src="assets/assets/pharos-state-ok.svg" width="22" alt="clear water"> | **Clear water** — below 50% |
-| <img src="assets/assets/pharos-state-caution.svg" width="22" alt="light on the horizon"> | **Light on the horizon** — 50% |
-| <img src="assets/assets/pharos-state-warning.svg" width="22" alt="full beam"> | **Full beam** — 75% |
-| <img src="assets/assets/pharos-state-critical.svg" width="22" alt="on the rocks"> | **On the rocks** — 90% |
+| <img src="assets/assets/pharos-state-caution.svg" width="22" alt="light on the horizon"> | **Light on the horizon** — from 50% |
+| <img src="assets/assets/pharos-state-warning.svg" width="22" alt="full beam"> | **Full beam** — from 75% |
+| <img src="assets/assets/pharos-state-critical.svg" width="22" alt="on the rocks"> | **On the rocks** — from 90% |
 
 ## Install
+
+Needs GNOME Shell 46–48 and
+[Claude Code](https://claude.com/product/claude-code) signed in on your
+machine.
 
 ```sh
 git clone https://github.com/aymenkrifa/Pharos.git
@@ -30,8 +35,8 @@ mkdir -p "$EXT"
 cp -r extension.js prefs.js lib metadata.json stylesheet.css schemas assets "$EXT/"
 ```
 
-Reload the shell (X11: `Alt+F2`, `r`, `Enter` — Wayland: log out and back in),
-then:
+Reload GNOME Shell (X11: `Alt+F2`, `r`, `Enter` — Wayland: log out and back
+in), then:
 
 ```sh
 gnome-extensions enable pharos@aymenkrifa.github.io
@@ -52,7 +57,7 @@ once and reopen the menu.
 ## Settings
 
 - **Background refresh** — keeps the beacon current between menu opens
-  (0 = refresh only when opened).
+  (0 = refresh only when the menu is opened).
 - **Thresholds** — where the beacon changes state (50 / 75 / 90 by default).
 - **Panel label** — show the active account as its full name, first letter,
   or not at all.
