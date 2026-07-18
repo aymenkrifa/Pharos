@@ -3,7 +3,9 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Pharos — brand sheet</title>
+<title>Pharos — your Claude usage, on the horizon</title>
+<meta name="description" content="Pharos is a GNOME Shell extension that keeps your Claude 5-hour and 7-day usage limits in the top panel — a beacon that warns you before you run onto the rocks.">
+<link rel="icon" href="pharos-mark.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Marcellus&display=swap" rel="stylesheet">
 <style>
@@ -12,204 +14,226 @@
     --gold:#F2A93B; --ember:#E07B39; --rocks:#D64541; --sea:#22375C;
   }
   * { box-sizing:border-box; margin:0; }
+  html { scroll-behavior:smooth; }
   body {
     background:var(--night-2); color:var(--stone);
-    font: 16px/1.6 Georgia, 'Times New Roman', serif;
+    font: 17px/1.65 Georgia, 'Times New Roman', serif;
   }
-  h1,h2,h3 { font-family:'Marcellus', Georgia, serif; font-weight:400; letter-spacing:.06em; }
-  main { max-width: 980px; margin: 0 auto; padding: 0 28px 90px; }
+  h1,h2,h3 { font-family:'Marcellus', Georgia, serif; font-weight:400; letter-spacing:.08em; }
+  h2 { font-size: 1.5rem; text-transform: uppercase; letter-spacing: .14em; }
+  a { color: var(--gold); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  main { max-width: 880px; margin: 0 auto; padding: 0 24px 80px; }
 
-  .hero {
-    padding: 84px 0 60px; text-align:center;
-    border-bottom: 1px solid rgba(234,224,200,.14);
+  .hero { padding: 72px 0 48px; text-align: center;
+          border-bottom: 1px solid rgba(234,224,200,.14); }
+  .hero img.lockup { max-width: 560px; width: 100%; height: auto; }
+  .hero p.tag { margin-top: 22px; color: var(--stone-s); font-style: italic; font-size: 1.1rem; }
+  .hero p.what { margin: 14px auto 0; max-width: 560px; }
+  .cta { margin-top: 30px; display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
+  .cta a {
+    display: inline-block; padding: 11px 26px; border-radius: 8px;
+    font-family: 'Marcellus', Georgia, serif; letter-spacing: .1em; text-transform: uppercase;
+    font-size: .92rem;
   }
-  .hero svg { max-width: 640px; width:100%; height:auto; }
-  .hero p { margin-top: 26px; color: var(--stone-s); font-style: italic; }
+  .cta a.primary { background: var(--gold); color: var(--night-2); }
+  .cta a.primary:hover { text-decoration: none; filter: brightness(1.07); }
+  .cta a.ghost { border: 1px solid rgba(234,224,200,.35); color: var(--stone); }
+  .cta a.ghost:hover { text-decoration: none; border-color: var(--stone-s); }
 
-  section { padding: 58px 0; border-bottom: 1px solid rgba(234,224,200,.14); }
-  .eyebrow {
-    font-family:'Marcellus', serif; color: var(--gold); letter-spacing:.28em;
-    font-size:.78rem; text-transform: uppercase; margin-bottom: 14px;
+  /* simulated top bar */
+  .panel-demo { margin: 44px auto 0; max-width: 560px; }
+  .panel-demo .bar {
+    background: #0b0f18; border-radius: 8px; padding: 8px 16px;
+    display: flex; justify-content: flex-end; align-items: center; gap: 7px;
+    font: 13px/1 'Cantarell', 'Segoe UI', sans-serif; color: var(--gold);
+    border: 1px solid rgba(234,224,200,.12);
   }
-  h2 { font-size: 1.7rem; margin-bottom: 10px; }
-  .lede { color: var(--stone-s); max-width: 62ch; }
+  .panel-demo .bar img { width: 17px; height: 17px; display: block; }
+  .panel-demo .caption { margin-top: 10px; color: var(--stone-s); font-size: .92rem; font-style: italic; }
 
-  .mark-row { display:flex; gap:44px; align-items:center; flex-wrap:wrap; margin-top:34px; }
-  .mark-row svg { width: 250px; height:auto; flex:none; }
-  .mark-note { max-width: 46ch; color: var(--stone-s); }
-  .mark-note strong { color: var(--stone); font-weight: normal; }
+  section { padding: 52px 0; border-bottom: 1px solid rgba(234,224,200,.14); }
+  section > p { max-width: 640px; }
+  .lede { margin-top: 14px; }
 
-  .panel {
-    margin: 36px 0 8px; background:#1c1c22; border-radius: 999px;
-    display:flex; align-items:center; gap: 22px; padding: 7px 22px;
-    width: fit-content; max-width:100%;
-    font: 13px/1 'Cantarell', 'Ubuntu', system-ui, sans-serif; color:#eee;
-    box-shadow: 0 8px 30px rgba(0,0,0,.45);
-  }
-  .panel .clock { letter-spacing:.02em; }
-  .panel-icon svg { display:block; }
-  .panel-sep { width:1px; height:14px; background:#3a3a42; }
-  .panel-hint { color: var(--stone-s); font-size:.85rem; margin-top:10px; }
-
-  .states { display:grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 18px; margin-top: 38px; }
+  /* beacon states */
+  .states { margin-top: 30px; display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  @media (max-width: 640px) { .states { grid-template-columns: 1fr; } }
   .state {
-    background: var(--night); border:1px solid rgba(234,224,200,.12); border-radius: 10px;
-    padding: 26px 18px 20px; text-align:center;
+    background: var(--night); border: 1px solid rgba(234,224,200,.12);
+    border-radius: 10px; padding: 18px 20px; display: flex; gap: 16px; align-items: flex-start;
   }
-  .state-icon { height: 72px; display:flex; align-items:center; justify-content:center; }
-  .state-name { font-family:'Marcellus', serif; margin-top: 14px; letter-spacing:.04em; }
-  .state-range { color: var(--stone-s); font-size:.85rem; margin-top:2px; }
-  .state-file { display:block; margin-top: 12px; font-size:.72rem; color:#8fa3c8; word-break:break-all; }
+  .state img { width: 30px; height: 30px; flex: none; margin-top: 3px; }
+  .state b { font-family: 'Marcellus', Georgia, serif; font-weight: 400; letter-spacing: .06em;
+             display: block; margin-bottom: 2px; }
+  .state .at { color: var(--stone-s); font-size: .85rem; }
+  .state p { font-size: .95rem; color: var(--stone-s); margin-top: 4px; }
 
-  .lockups { display:grid; gap: 22px; margin-top: 34px; }
-  .card { border-radius: 12px; padding: 34px 30px; }
-  .card.dark { background: var(--night); border:1px solid rgba(234,224,200,.12); }
-  .card.light { background: #F5EFE0; }
-  .card svg { width: 100%; max-width: 560px; height: auto; display:block; }
-
-  .chips { display:flex; flex-wrap:wrap; gap: 14px 26px; margin-top: 30px; }
-  .chip { display:flex; align-items:center; gap:10px; font-size:.85rem; color:var(--stone-s); }
-  .chip .swatch { width: 26px; height: 26px; border-radius: 50%; border:1px solid rgba(234,224,200,.25); }
-  .chip code { color: var(--stone); }
-
-  .type-specimen { margin-top: 30px; }
-  .type-specimen .display { font-family:'Marcellus', serif; font-size: 2.6rem; letter-spacing:.14em; }
-  .type-specimen .caption { color: var(--stone-s); font-size:.85rem; margin-top: 8px; }
-
-  footer { padding-top: 42px; color: var(--stone-s); font-size:.85rem; text-align:center; font-style:italic; }
-  @media (prefers-reduced-motion: no-preference) {
-    .hero svg { animation: rise .9s ease-out both; }
-    @keyframes rise { from { opacity:0; transform: translateY(10px); } to { opacity:1; transform:none; } }
+  /* install */
+  ol.steps { margin: 26px 0 0; padding: 0; list-style: none; counter-reset: step; }
+  ol.steps li { counter-increment: step; padding: 18px 0 18px 58px; position: relative; }
+  ol.steps li + li { border-top: 1px dashed rgba(234,224,200,.14); }
+  ol.steps li::before {
+    content: counter(step); position: absolute; left: 6px; top: 20px;
+    width: 34px; height: 34px; border-radius: 50%; border: 1px solid var(--stone-s);
+    color: var(--stone-s); display: flex; align-items: center; justify-content: center;
+    font-family: 'Marcellus', Georgia, serif; font-size: 1rem;
   }
+  ol.steps li b { font-family:'Marcellus', Georgia, serif; font-weight: 400; letter-spacing: .05em; }
+  ol.steps li p { color: var(--stone-s); font-size: .97rem; margin-top: 3px; }
+  pre {
+    margin-top: 12px; background: #0b0f18; border: 1px solid rgba(234,224,200,.14);
+    border-radius: 8px; padding: 15px 17px; overflow-x: auto;
+    font: 13.5px/1.65 'JetBrains Mono', 'Fira Mono', monospace; color: var(--stone);
+    position: relative;
+  }
+  pre .copy {
+    position: absolute; top: 8px; right: 8px; border: 1px solid rgba(234,224,200,.25);
+    background: transparent; color: var(--stone-s); border-radius: 6px;
+    font: 11px 'Cantarell', sans-serif; padding: 4px 10px; cursor: pointer;
+  }
+  pre .copy:hover { color: var(--stone); border-color: var(--stone-s); }
+  code { color: var(--gold); }
+  pre code { color: inherit; }
+  .req { margin-top: 16px; color: var(--stone-s); font-size: .95rem; }
+
+  .note {
+    margin-top: 24px; background: var(--sea); border-radius: 10px; padding: 16px 20px;
+    font-size: .97rem;
+  }
+  .note b { font-family:'Marcellus', Georgia, serif; font-weight:400; letter-spacing:.05em; }
+
+  footer { padding: 34px 0 10px; text-align: center; color: var(--stone-s); font-size: .9rem; }
+  footer p + p { margin-top: 6px; }
 </style>
 </head>
 <body>
 <main>
 
   <div class="hero">
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 810 230" width="810" height="230"><g transform="translate(20,20) scale(0.37109375)"><defs>
-  <clipPath id="field"><rect x="0" y="0" width="512" height="512" rx="112"/></clipPath>
-  <linearGradient id="beamL" x1="1" y1="0" x2="0" y2="0">
-    <stop offset="0" stop-color="#F2A93B" stop-opacity="0.55"/><stop offset="1" stop-color="#F2A93B" stop-opacity="0"/>
-  </linearGradient>
-  <linearGradient id="beamR" x1="0" y1="0" x2="1" y2="0">
-    <stop offset="0" stop-color="#F2A93B" stop-opacity="0.55"/><stop offset="1" stop-color="#F2A93B" stop-opacity="0"/>
-  </linearGradient>
-  <radialGradient id="halo" cx="0.5" cy="0.5" r="0.5">
-    <stop offset="0" stop-color="#FFD98E" stop-opacity="0.85"/><stop offset="1" stop-color="#FFD98E" stop-opacity="0"/>
-  </radialGradient>
-</defs><g clip-path="url(#field)"><rect x="0" y="0" width="512" height="512" fill="#16233F"/><rect x="0" y="420.0" width="512" height="512" fill="#22375C"/><path d="M 46 444.0 L 70 408.0 L 88 426.0 L 106 402.0 L 128 444.0 Z" fill="#0C1426"/><path d="M 384 444.0 L 406 414.0 L 422 430.0 L 444 406.0 L 466 444.0 Z" fill="#0C1426"/><path d="M -20 442.0 q 14 -12 28 0 M 8 442.0 q 14 -12 28 0 M 36 442.0 q 14 -12 28 0 M 64 442.0 q 14 -12 28 0 M 92 442.0 q 14 -12 28 0 M 120 442.0 q 14 -12 28 0 M 148 442.0 q 14 -12 28 0 M 176 442.0 q 14 -12 28 0 M 204 442.0 q 14 -12 28 0 M 232 442.0 q 14 -12 28 0 M 260 442.0 q 14 -12 28 0 M 288 442.0 q 14 -12 28 0 M 316 442.0 q 14 -12 28 0 M 344 442.0 q 14 -12 28 0 M 372 442.0 q 14 -12 28 0 M 400 442.0 q 14 -12 28 0 M 428 442.0 q 14 -12 28 0 M 456 442.0 q 14 -12 28 0 M 484 442.0 q 14 -12 28 0 M 512 442.0 q 14 -12 28 0" stroke="#3D5A8A" stroke-width="4" fill="none" opacity="0.9" stroke-linecap="round"/><path d="M -6 464.0 q 14 -12 28 0 M 22 464.0 q 14 -12 28 0 M 50 464.0 q 14 -12 28 0 M 78 464.0 q 14 -12 28 0 M 106 464.0 q 14 -12 28 0 M 134 464.0 q 14 -12 28 0 M 162 464.0 q 14 -12 28 0 M 190 464.0 q 14 -12 28 0 M 218 464.0 q 14 -12 28 0 M 246 464.0 q 14 -12 28 0 M 274 464.0 q 14 -12 28 0 M 302 464.0 q 14 -12 28 0 M 330 464.0 q 14 -12 28 0 M 358 464.0 q 14 -12 28 0 M 386 464.0 q 14 -12 28 0 M 414 464.0 q 14 -12 28 0 M 442 464.0 q 14 -12 28 0 M 470 464.0 q 14 -12 28 0 M 498 464.0 q 14 -12 28 0 M 526 464.0 q 14 -12 28 0" stroke="#3D5A8A" stroke-width="4" fill="none" opacity="0.55" stroke-linecap="round"/><path d="M -20 486.0 q 14 -12 28 0 M 8 486.0 q 14 -12 28 0 M 36 486.0 q 14 -12 28 0 M 64 486.0 q 14 -12 28 0 M 92 486.0 q 14 -12 28 0 M 120 486.0 q 14 -12 28 0 M 148 486.0 q 14 -12 28 0 M 176 486.0 q 14 -12 28 0 M 204 486.0 q 14 -12 28 0 M 232 486.0 q 14 -12 28 0 M 260 486.0 q 14 -12 28 0 M 288 486.0 q 14 -12 28 0 M 316 486.0 q 14 -12 28 0 M 344 486.0 q 14 -12 28 0 M 372 486.0 q 14 -12 28 0 M 400 486.0 q 14 -12 28 0 M 428 486.0 q 14 -12 28 0 M 456 486.0 q 14 -12 28 0 M 484 486.0 q 14 -12 28 0 M 512 486.0 q 14 -12 28 0" stroke="#3D5A8A" stroke-width="4" fill="none" opacity="0.3" stroke-linecap="round"/><circle cx="96" cy="108" r="3" fill="#EAE0C8" opacity="0.55"/><circle cx="416" cy="84" r="2.4" fill="#EAE0C8" opacity="0.55"/><circle cx="388" cy="168" r="2" fill="#EAE0C8" opacity="0.55"/><circle cx="76" cy="196" r="2" fill="#EAE0C8" opacity="0.55"/><path d="M 250.0 90.0 L 0 106.0 L 0 166.0 L 250.0 112.0 Z" fill="url(#beamL)"/><path d="M 262.0 90.0 L 512 106.0 L 512 166.0 L 262.0 112.0 Z" fill="url(#beamR)"/><circle cx="256.0" cy="98.0" r="54" fill="url(#halo)"/><g transform="translate(86.0,108.0) scale(1.0)"><rect x="52" y="330" width="236" height="22" fill="#EAE0C8"/><rect x="52" y="330" width="118" height="22" fill="#C9B48C"/><rect x="52" y="352" width="236" height="3" fill="#A88F66" opacity="0.55"/><path d="M 84 322 L 104 180 L 170 180 L 170 322 Z" fill="#C9B48C"/><path d="M 170 322 L 170 180 L 236 180 L 256 322 Z" fill="#EAE0C8"/><rect x="96" y="170" width="148" height="10" fill="#EAE0C8"/><rect x="96" y="170" width="74" height="10" fill="#C9B48C"/><rect x="96" y="180" width="148" height="3" fill="#A88F66" opacity="0.55"/><path d="M 100 170 L 108 154 L 116 170 Z" fill="#C9B48C"/><path d="M 224 170 L 232 154 L 240 170 Z" fill="#EAE0C8"/><path d="M 156 322 L 156 296 A 14 14 0 0 1 184 296 L 184 322 Z" fill="#0F1930"/><path d="M 126 160 L 136 88 L 170 88 L 170 160 Z" fill="#C9B48C"/><path d="M 170 160 L 170 88 L 204 88 L 214 160 Z" fill="#EAE0C8"/><path d="M 148 160 L 145 88 M 192 160 L 195 88" stroke="#A88F66" stroke-width="2.5" opacity="0.45" fill="none"/><rect x="130" y="78" width="80" height="10" fill="#EAE0C8"/><rect x="130" y="78" width="40" height="10" fill="#C9B48C"/><rect x="130" y="88" width="80" height="3" fill="#A88F66" opacity="0.55"/><path d="M 152 68 L 154 26 L 170 26 L 170 68 Z" fill="#C9B48C"/><path d="M 170 68 L 170 26 L 186 26 L 188 68 Z" fill="#EAE0C8"/><rect x="158" y="34" width="5" height="18" rx="2.5" fill="#0F1930"/><rect x="168" y="34" width="5" height="18" rx="2.5" fill="#0F1930"/><rect x="178" y="34" width="5" height="18" rx="2.5" fill="#0F1930"/><rect x="146" y="16" width="48" height="10" fill="#EAE0C8"/><rect x="146" y="16" width="24" height="10" fill="#C9B48C"/><rect x="146" y="26" width="48" height="3" fill="#A88F66" opacity="0.55"/><path d="M 170 -34 C 178 -22 184 -14 184 -3 A 14 14 0 0 1 156 -3 C 156 -14 162 -22 170 -34 Z" fill="#F2A93B"/>
-<path d="M 170 -18 C 174 -12 177 -8 177 -2 A 7 7 0 0 1 163 -2 C 163 -8 166 -12 170 -18 Z" fill="#FFD98E"/></g></g></g><g transform="translate(256,156.3)" fill="#EAE0C8"><path transform="translate(0.00,0) scale(0.057617,-0.057617)" d="M354 635Q452 617 533.5 631.5Q615 646 673.5 693.5Q732 741 764.5 822.0Q797 903 797 1020Q797 1101 780.0 1167.5Q763 1234 729.5 1280.5Q696 1327 645.0 1352.5Q594 1378 526 1378Q483 1378 451.0 1374.5Q419 1371 397 1367Q371 1362 354 1356ZM143 1434Q163 1432 185 1430Q204 1428 227.5 1427.5Q251 1427 276 1427Q315 1427 381.5 1436.5Q448 1446 551 1446Q647 1446 728.5 1418.0Q810 1390 870.0 1336.0Q930 1282 963.5 1204.5Q997 1127 997 1028Q997 895 944.0 798.0Q891 701 802.0 641.0Q713 581 597.0 559.5Q481 538 354 557V391Q354 306 356.5 242.5Q359 179 362.5 133.0Q366 87 371.5 56.0Q377 25 383 4V0H143V4Q149 25 154.5 56.0Q160 87 164.0 133.0Q168 179 170.0 242.5Q172 306 172 391V1042Q172 1127 170.0 1190.5Q168 1254 164.0 1300.5Q160 1347 154.5 1378.0Q149 1409 143 1430Z"/><path transform="translate(77.44,0) scale(0.057617,-0.057617)" d="M1135 686Q1095 687 1035.0 687.5Q975 688 904.5 689.0Q834 690 757.5 690.5Q681 691 608.0 691.5Q535 692 469.0 691.0Q403 690 354 688V391Q354 306 356.5 242.5Q359 179 362.5 133.0Q366 87 371.5 56.0Q377 25 383 4V0H143V4Q149 25 154.5 56.0Q160 87 164.0 133.0Q168 179 170.0 242.5Q172 306 172 391V1042Q172 1127 170.0 1190.5Q168 1254 164.0 1300.5Q160 1347 154.5 1378.0Q149 1409 143 1430V1434H383V1430Q377 1409 371.5 1378.0Q366 1347 362.5 1300.5Q359 1254 356.5 1190.5Q354 1127 354 1042V786Q406 784 472.0 783.5Q538 783 610.0 783.5Q682 784 756.5 785.0Q831 786 900.5 787.5Q970 789 1030.5 791.0Q1091 793 1135 795V1042Q1135 1127 1132.5 1190.5Q1130 1254 1126.5 1300.5Q1123 1347 1117.5 1378.0Q1112 1409 1106 1430V1434H1346V1430Q1340 1409 1334.5 1378.0Q1329 1347 1325.0 1300.5Q1321 1254 1319.0 1190.5Q1317 1127 1317 1042V391Q1317 306 1319.0 242.5Q1321 179 1325.0 133.0Q1329 87 1334.5 56.0Q1340 25 1346 4V0H1106V4Q1112 25 1117.5 56.0Q1123 87 1126.5 133.0Q1130 179 1132.5 242.5Q1135 306 1135 391Z"/><path transform="translate(180.23,0) scale(0.057617,-0.057617)" d="M1135 0V4Q1137 9 1138.0 19.0Q1139 29 1139 37Q1139 68 1130.5 105.5Q1122 143 1098 199L977 471Q921 473 828.0 473.0Q735 473 627 473Q548 473 474.5 473.0Q401 473 342 471L227 207Q212 170 195.0 126.0Q178 82 178 37Q178 24 180.0 15.5Q182 7 184 4V0H-20V4Q-2 23 25.0 71.5Q52 120 84 193L657 1464H737L1280 242Q1299 199 1319.5 158.5Q1340 118 1358.0 86.0Q1376 54 1390.0 32.0Q1404 10 1409 4V0ZM487 559Q545 559 606.0 559.5Q667 560 725.5 560.5Q784 561 838.0 561.5Q892 562 936 563L655 1198L379 559Z"/><path transform="translate(277.26,0) scale(0.057617,-0.057617)" d="M354 391Q354 306 356.5 242.5Q359 179 362.5 133.0Q366 87 371.5 56.0Q377 25 383 4V0H143V4Q149 25 154.5 56.0Q160 87 163.5 133.0Q167 179 169.5 242.0Q172 305 172 391V1042Q172 1127 169.5 1190.5Q167 1254 163.5 1300.0Q160 1346 154.5 1377.5Q149 1409 143 1430V1434L185 1430Q204 1428 227.5 1427.5Q251 1427 276 1427Q315 1427 381.5 1436.5Q448 1446 551 1446Q647 1446 728.5 1420.0Q810 1394 870.0 1344.0Q930 1294 963.5 1221.5Q997 1149 997 1057Q997 985 978.5 923.5Q960 862 926.5 812.0Q893 762 846.0 723.5Q799 685 741 659L1092 166Q1118 129 1140.5 102.0Q1163 75 1183.5 55.5Q1204 36 1223.0 23.5Q1242 11 1262 4V0H973Q970 19 953.5 50.5Q937 82 915 113L561 612Q538 610 515.0 608.5Q492 607 468 607Q440 607 411.5 609.0Q383 611 354 616ZM354 694Q381 688 409.0 685.5Q437 683 463 683Q538 683 600.0 705.5Q662 728 705.5 774.0Q749 820 773.0 888.5Q797 957 797 1049Q797 1124 780.0 1185.0Q763 1246 729.5 1288.5Q696 1331 645.0 1354.5Q594 1378 526 1378Q457 1378 416.0 1371.0Q375 1364 354 1356Z"/><path transform="translate(363.98,0) scale(0.057617,-0.057617)" d="M797 1458Q964 1458 1105.5 1403.5Q1247 1349 1350.0 1250.5Q1453 1152 1511.0 1014.0Q1569 876 1569 709Q1569 614 1547.0 522.0Q1525 430 1482.5 348.0Q1440 266 1378.0 196.5Q1316 127 1236.5 76.5Q1157 26 1061.0 -2.5Q965 -31 854 -31Q687 -31 545.5 22.5Q404 76 301.0 174.0Q198 272 140.0 409.5Q82 547 82 715Q82 810 104.0 902.0Q126 994 168.5 1077.0Q211 1160 272.5 1229.5Q334 1299 413.5 1350.0Q493 1401 589.5 1429.5Q686 1458 797 1458ZM854 59Q965 59 1057.0 99.0Q1149 139 1215.5 215.0Q1282 291 1319.0 400.5Q1356 510 1356 649Q1356 803 1320.5 934.5Q1285 1066 1215.0 1162.5Q1145 1259 1040.5 1313.5Q936 1368 797 1368Q686 1368 594.0 1328.5Q502 1289 435.5 1214.0Q369 1139 332.0 1030.0Q295 921 295 782Q295 629 330.0 496.5Q365 364 435.0 267.0Q505 170 610.0 114.5Q715 59 854 59Z"/><path transform="translate(476.11,0) scale(0.057617,-0.057617)" d="M741 1206H719Q711 1229 693.5 1258.0Q676 1287 647.5 1312.5Q619 1338 578.5 1355.0Q538 1372 483 1372Q434 1372 396.0 1357.0Q358 1342 332.5 1315.0Q307 1288 294.0 1251.0Q281 1214 281 1169Q281 1097 321.5 1031.5Q362 966 423.0 902.0Q484 838 555.0 774.0Q626 710 687.0 641.0Q748 572 788.5 496.5Q829 421 829 334Q829 269 806.5 203.5Q784 138 737.0 86.0Q690 34 616.0 1.5Q542 -31 440 -31Q383 -31 331.5 -20.5Q280 -10 236.5 5.5Q193 21 158.5 39.0Q124 57 102 72L125 293H150Q161 246 186.0 203.5Q211 161 247.5 128.5Q284 96 331.0 76.5Q378 57 434 57Q485 57 525.5 72.5Q566 88 595.0 115.5Q624 143 639.5 181.0Q655 219 655 264Q655 327 632.0 380.5Q609 434 571.5 482.0Q534 530 486.5 575.0Q439 620 389.0 665.5Q339 711 291.5 759.0Q244 807 206.5 861.5Q169 916 146.0 978.5Q123 1041 123 1116Q123 1195 153.5 1258.5Q184 1322 234.5 1367.0Q285 1412 349.0 1436.0Q413 1460 481 1460Q531 1460 573.0 1452.0Q615 1444 648.5 1433.0Q682 1422 707.0 1411.0Q732 1400 748 1393Z"/></g></svg>
-    <p>A colored light on the horizon — before you run onto the rocks.</p>
+    <img class="lockup" src="pharos-logo-dark.svg" alt="Pharos" width="560" height="159">
+    <p class="tag">A colored light on the horizon, before you run onto the rocks.</p>
+    <p class="what">Pharos keeps your Claude usage limits in view — quietly, from the
+    GNOME top panel — so you're never surprised by "limit reached" mid-thought.</p>
+    <div class="cta">
+      <a class="primary" href="#install">Install</a>
+      <a class="ghost" href="https://github.com/aymenkrifa/Pharos">GitHub</a>
+    </div>
+    <div class="panel-demo">
+      <div class="bar" aria-label="Simulated GNOME top bar">
+        <img src="pharos-state-caution.svg" alt="Pharos beacon, caution state">
+        <span>W&nbsp;64/32&nbsp;●</span>
+      </div>
+      <p class="caption">64% of the 5-hour window, 32% of the 7-day — fetched a moment ago.</p>
+    </div>
   </div>
 
-  <section>
-    <div class="eyebrow">The Mark</div>
-    <h2>The Pharos, as it stood</h2>
-    <p class="lede">A rounded-square emblem on a night field &mdash; sized to work as an app icon, an avatar, or the extension listing.</p>
-    <div class="mark-row">
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512"><defs>
-  <clipPath id="field"><rect x="0" y="0" width="512" height="512" rx="112"/></clipPath>
-  <linearGradient id="beamL" x1="1" y1="0" x2="0" y2="0">
-    <stop offset="0" stop-color="#F2A93B" stop-opacity="0.55"/><stop offset="1" stop-color="#F2A93B" stop-opacity="0"/>
-  </linearGradient>
-  <linearGradient id="beamR" x1="0" y1="0" x2="1" y2="0">
-    <stop offset="0" stop-color="#F2A93B" stop-opacity="0.55"/><stop offset="1" stop-color="#F2A93B" stop-opacity="0"/>
-  </linearGradient>
-  <radialGradient id="halo" cx="0.5" cy="0.5" r="0.5">
-    <stop offset="0" stop-color="#FFD98E" stop-opacity="0.85"/><stop offset="1" stop-color="#FFD98E" stop-opacity="0"/>
-  </radialGradient>
-</defs><g clip-path="url(#field)"><rect x="0" y="0" width="512" height="512" fill="#16233F"/><rect x="0" y="420.0" width="512" height="512" fill="#22375C"/><path d="M 46 444.0 L 70 408.0 L 88 426.0 L 106 402.0 L 128 444.0 Z" fill="#0C1426"/><path d="M 384 444.0 L 406 414.0 L 422 430.0 L 444 406.0 L 466 444.0 Z" fill="#0C1426"/><path d="M -20 442.0 q 14 -12 28 0 M 8 442.0 q 14 -12 28 0 M 36 442.0 q 14 -12 28 0 M 64 442.0 q 14 -12 28 0 M 92 442.0 q 14 -12 28 0 M 120 442.0 q 14 -12 28 0 M 148 442.0 q 14 -12 28 0 M 176 442.0 q 14 -12 28 0 M 204 442.0 q 14 -12 28 0 M 232 442.0 q 14 -12 28 0 M 260 442.0 q 14 -12 28 0 M 288 442.0 q 14 -12 28 0 M 316 442.0 q 14 -12 28 0 M 344 442.0 q 14 -12 28 0 M 372 442.0 q 14 -12 28 0 M 400 442.0 q 14 -12 28 0 M 428 442.0 q 14 -12 28 0 M 456 442.0 q 14 -12 28 0 M 484 442.0 q 14 -12 28 0 M 512 442.0 q 14 -12 28 0" stroke="#3D5A8A" stroke-width="4" fill="none" opacity="0.9" stroke-linecap="round"/><path d="M -6 464.0 q 14 -12 28 0 M 22 464.0 q 14 -12 28 0 M 50 464.0 q 14 -12 28 0 M 78 464.0 q 14 -12 28 0 M 106 464.0 q 14 -12 28 0 M 134 464.0 q 14 -12 28 0 M 162 464.0 q 14 -12 28 0 M 190 464.0 q 14 -12 28 0 M 218 464.0 q 14 -12 28 0 M 246 464.0 q 14 -12 28 0 M 274 464.0 q 14 -12 28 0 M 302 464.0 q 14 -12 28 0 M 330 464.0 q 14 -12 28 0 M 358 464.0 q 14 -12 28 0 M 386 464.0 q 14 -12 28 0 M 414 464.0 q 14 -12 28 0 M 442 464.0 q 14 -12 28 0 M 470 464.0 q 14 -12 28 0 M 498 464.0 q 14 -12 28 0 M 526 464.0 q 14 -12 28 0" stroke="#3D5A8A" stroke-width="4" fill="none" opacity="0.55" stroke-linecap="round"/><path d="M -20 486.0 q 14 -12 28 0 M 8 486.0 q 14 -12 28 0 M 36 486.0 q 14 -12 28 0 M 64 486.0 q 14 -12 28 0 M 92 486.0 q 14 -12 28 0 M 120 486.0 q 14 -12 28 0 M 148 486.0 q 14 -12 28 0 M 176 486.0 q 14 -12 28 0 M 204 486.0 q 14 -12 28 0 M 232 486.0 q 14 -12 28 0 M 260 486.0 q 14 -12 28 0 M 288 486.0 q 14 -12 28 0 M 316 486.0 q 14 -12 28 0 M 344 486.0 q 14 -12 28 0 M 372 486.0 q 14 -12 28 0 M 400 486.0 q 14 -12 28 0 M 428 486.0 q 14 -12 28 0 M 456 486.0 q 14 -12 28 0 M 484 486.0 q 14 -12 28 0 M 512 486.0 q 14 -12 28 0" stroke="#3D5A8A" stroke-width="4" fill="none" opacity="0.3" stroke-linecap="round"/><circle cx="96" cy="108" r="3" fill="#EAE0C8" opacity="0.55"/><circle cx="416" cy="84" r="2.4" fill="#EAE0C8" opacity="0.55"/><circle cx="388" cy="168" r="2" fill="#EAE0C8" opacity="0.55"/><circle cx="76" cy="196" r="2" fill="#EAE0C8" opacity="0.55"/><path d="M 250.0 90.0 L 0 106.0 L 0 166.0 L 250.0 112.0 Z" fill="url(#beamL)"/><path d="M 262.0 90.0 L 512 106.0 L 512 166.0 L 262.0 112.0 Z" fill="url(#beamR)"/><circle cx="256.0" cy="98.0" r="54" fill="url(#halo)"/><g transform="translate(86.0,108.0) scale(1.0)"><rect x="52" y="330" width="236" height="22" fill="#EAE0C8"/><rect x="52" y="330" width="118" height="22" fill="#C9B48C"/><rect x="52" y="352" width="236" height="3" fill="#A88F66" opacity="0.55"/><path d="M 84 322 L 104 180 L 170 180 L 170 322 Z" fill="#C9B48C"/><path d="M 170 322 L 170 180 L 236 180 L 256 322 Z" fill="#EAE0C8"/><rect x="96" y="170" width="148" height="10" fill="#EAE0C8"/><rect x="96" y="170" width="74" height="10" fill="#C9B48C"/><rect x="96" y="180" width="148" height="3" fill="#A88F66" opacity="0.55"/><path d="M 100 170 L 108 154 L 116 170 Z" fill="#C9B48C"/><path d="M 224 170 L 232 154 L 240 170 Z" fill="#EAE0C8"/><path d="M 156 322 L 156 296 A 14 14 0 0 1 184 296 L 184 322 Z" fill="#0F1930"/><path d="M 126 160 L 136 88 L 170 88 L 170 160 Z" fill="#C9B48C"/><path d="M 170 160 L 170 88 L 204 88 L 214 160 Z" fill="#EAE0C8"/><path d="M 148 160 L 145 88 M 192 160 L 195 88" stroke="#A88F66" stroke-width="2.5" opacity="0.45" fill="none"/><rect x="130" y="78" width="80" height="10" fill="#EAE0C8"/><rect x="130" y="78" width="40" height="10" fill="#C9B48C"/><rect x="130" y="88" width="80" height="3" fill="#A88F66" opacity="0.55"/><path d="M 152 68 L 154 26 L 170 26 L 170 68 Z" fill="#C9B48C"/><path d="M 170 68 L 170 26 L 186 26 L 188 68 Z" fill="#EAE0C8"/><rect x="158" y="34" width="5" height="18" rx="2.5" fill="#0F1930"/><rect x="168" y="34" width="5" height="18" rx="2.5" fill="#0F1930"/><rect x="178" y="34" width="5" height="18" rx="2.5" fill="#0F1930"/><rect x="146" y="16" width="48" height="10" fill="#EAE0C8"/><rect x="146" y="16" width="24" height="10" fill="#C9B48C"/><rect x="146" y="26" width="48" height="3" fill="#A88F66" opacity="0.55"/><path d="M 170 -34 C 178 -22 184 -14 184 -3 A 14 14 0 0 1 156 -3 C 156 -14 162 -22 170 -34 Z" fill="#F2A93B"/>
-<path d="M 170 -18 C 174 -12 177 -8 177 -2 A 7 7 0 0 1 163 -2 C 163 -8 166 -12 170 -18 Z" fill="#FFD98E"/></g></g></svg>
-      <div class="mark-note">
-        <p>The tower keeps the three historical tiers — <strong>square base, octagonal shaft, cylindrical fire tower</strong> — with the monumental entrance, the fire chamber colonnade, and the open flame that burned at the summit. Below, the harbour and <strong>the rocks the light exists to warn you about.</strong></p>
+  <section id="beacon">
+    <h2>Read the beacon</h2>
+    <p class="lede">The beacon watches both usage windows and always shows the one
+    closest to its limit. Both its shape and its color change, so the warning reads
+    even in grayscale. Open the menu for exact percentages and when each window
+    resets.</p>
+    <div class="states">
+      <div class="state">
+        <img src="pharos-state-ok.svg" alt="Tower with flame, untinted">
+        <div><b>Clear water</b> <span class="at">below 50%</span>
+        <p>Sailing normally. The tower stands, the flame is lit.</p></div>
+      </div>
+      <div class="state">
+        <img src="pharos-state-caution.svg" alt="Tower with short rays, gold">
+        <div><b>Light on the horizon</b> <span class="at">from 50%</span>
+        <p>Half the window is spent. Worth a glance now and then.</p></div>
+      </div>
+      <div class="state">
+        <img src="pharos-state-warning.svg" alt="Tower with full beam, ember">
+        <div><b>Full beam</b> <span class="at">from 75%</span>
+        <p>Approaching the limit. Ease off, or check when it resets.</p></div>
+      </div>
+      <div class="state">
+        <img src="pharos-state-critical.svg" alt="Tower with beam and exclamation badge, red">
+        <div><b>On the rocks</b> <span class="at">from 90%</span>
+        <p>The limit is upon you. The reset time is in the menu.</p></div>
       </div>
     </div>
+    <p style="margin-top:22px; color:var(--stone-s); font-size:.95rem;">
+    All three thresholds are adjustable in Settings.</p>
   </section>
 
-  <section>
-    <div class="eyebrow">Status Bar</div>
-    <h2>Four watch states</h2>
-    <p class="lede">GNOME symbolic icons, 16&times;16, monochrome — the shell recolors them, and the extension tints them by usage. The shapes differ too, so the state reads even without color.</p>
-    <div class="panel">
-      <span>Activities</span>
-      <span class="panel-sep"></span>
-      <span class="clock">Jul 18&nbsp;&nbsp;21:04</span>
-      <span class="panel-sep"></span>
-      <span class="panel-icon" style="color:#ECE5D3;" title="Clear water"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16"><g fill="currentColor"><path d="M8 0.4 C8.9 1.5 9.5 2.2 9.5 3.1 A1.5 1.5 0 0 1 6.5 3.1 C6.5 2.2 7.1 1.5 8 0.4 Z"/><path d="M6.6 5.2 H9.4 V7.4 H6.6 Z"/><path d="M6.3 7.9 H9.7 L10.3 10.7 H5.7 Z"/><path d="M5.4 11.2 H10.6 L11.4 15.5 H4.6 Z M8 12.4 A1.1 1.1 0 0 0 6.9 13.5 L6.9 15.5 L9.1 15.5 L9.1 13.5 A1.1 1.1 0 0 0 8 12.4 Z" fill-rule="evenodd"/></g></svg></span><span class="panel-icon" style="color:#E8B54A;" title="Light on the horizon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16"><g fill="currentColor"><path d="M8 0.4 C8.9 1.5 9.5 2.2 9.5 3.1 A1.5 1.5 0 0 1 6.5 3.1 C6.5 2.2 7.1 1.5 8 0.4 Z"/><path d="M6.6 5.2 H9.4 V7.4 H6.6 Z"/><path d="M6.3 7.9 H9.7 L10.3 10.7 H5.7 Z"/><path d="M5.4 11.2 H10.6 L11.4 15.5 H4.6 Z M8 12.4 A1.1 1.1 0 0 0 6.9 13.5 L6.9 15.5 L9.1 15.5 L9.1 13.5 A1.1 1.1 0 0 0 8 12.4 Z" fill-rule="evenodd"/><rect x="3.3" y="2.15" width="2.0" height="1.4" rx="0.7"/><rect x="10.7" y="2.15" width="2.0" height="1.4" rx="0.7"/></g></svg></span><span class="panel-icon" style="color:#E07B39;" title="Full beam"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16"><g fill="currentColor"><path d="M8 0.4 C8.9 1.5 9.5 2.2 9.5 3.1 A1.5 1.5 0 0 1 6.5 3.1 C6.5 2.2 7.1 1.5 8 0.4 Z"/><path d="M6.6 5.2 H9.4 V7.4 H6.6 Z"/><path d="M6.3 7.9 H9.7 L10.3 10.7 H5.7 Z"/><path d="M5.4 11.2 H10.6 L11.4 15.5 H4.6 Z M8 12.4 A1.1 1.1 0 0 0 6.9 13.5 L6.9 15.5 L9.1 15.5 L9.1 13.5 A1.1 1.1 0 0 0 8 12.4 Z" fill-rule="evenodd"/><rect x="1.9" y="2.15" width="3.4" height="1.4" rx="0.7"/><rect x="10.7" y="2.15" width="3.4" height="1.4" rx="0.7"/><rect x="1.1" y="4.6" width="2.6" height="1.3" rx="0.65" transform="rotate(14 2.4 5.25)"/><rect x="12.3" y="4.6" width="2.6" height="1.3" rx="0.65" transform="rotate(-14 13.6 5.25)"/></g></svg></span><span class="panel-icon" style="color:#D64541;" title="On the rocks"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16"><defs><mask id="m"><rect width="16" height="16" fill="#fff"/><circle cx="12.1" cy="12.1" r="5.1" fill="#000"/></mask></defs><g fill="currentColor" mask="url(#m)"><path d="M8 0.4 C8.9 1.5 9.5 2.2 9.5 3.1 A1.5 1.5 0 0 1 6.5 3.1 C6.5 2.2 7.1 1.5 8 0.4 Z"/><path d="M6.6 5.2 H9.4 V7.4 H6.6 Z"/><path d="M6.3 7.9 H9.7 L10.3 10.7 H5.7 Z"/><path d="M5.4 11.2 H10.6 L11.4 15.5 H4.6 Z M8 12.4 A1.1 1.1 0 0 0 6.9 13.5 L6.9 15.5 L9.1 15.5 L9.1 13.5 A1.1 1.1 0 0 0 8 12.4 Z" fill-rule="evenodd"/><rect x="1.9" y="2.15" width="3.4" height="1.4" rx="0.7"/><rect x="10.7" y="2.15" width="3.4" height="1.4" rx="0.7"/><rect x="1.1" y="4.6" width="2.6" height="1.3" rx="0.65" transform="rotate(14 2.4 5.25)"/><rect x="12.3" y="4.6" width="2.6" height="1.3" rx="0.65" transform="rotate(-14 13.6 5.25)"/></g><path fill="currentColor" fill-rule="evenodd" d="M12.1 8.1 A4 4 0 1 1 12.099 8.1 Z M11.4 9.5 L11.63 12.4 L12.57 12.4 L12.8 9.5 Z M12.1 13.3 A0.9 0.9 0 1 0 12.101 13.3 Z"/></svg></span>
-    </div>
-    <div class="panel-hint">The four states at true 16 px in a top bar.</div>
-    <div class="states">
-    <div class="state">
-      <div class="state-icon" style="color:#ECE5D3;"><svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 16 16"><g fill="currentColor"><path d="M8 0.4 C8.9 1.5 9.5 2.2 9.5 3.1 A1.5 1.5 0 0 1 6.5 3.1 C6.5 2.2 7.1 1.5 8 0.4 Z"/><path d="M6.6 5.2 H9.4 V7.4 H6.6 Z"/><path d="M6.3 7.9 H9.7 L10.3 10.7 H5.7 Z"/><path d="M5.4 11.2 H10.6 L11.4 15.5 H4.6 Z M8 12.4 A1.1 1.1 0 0 0 6.9 13.5 L6.9 15.5 L9.1 15.5 L9.1 13.5 A1.1 1.1 0 0 0 8 12.4 Z" fill-rule="evenodd"/></g></svg></div>
-      <div class="state-name">Clear water</div>
-      <div class="state-range">&lt; 50% of the limit</div>
-      <code class="state-file">pharos-symbolic.svg</code>
-    </div>
-    <div class="state">
-      <div class="state-icon" style="color:#E8B54A;"><svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 16 16"><g fill="currentColor"><path d="M8 0.4 C8.9 1.5 9.5 2.2 9.5 3.1 A1.5 1.5 0 0 1 6.5 3.1 C6.5 2.2 7.1 1.5 8 0.4 Z"/><path d="M6.6 5.2 H9.4 V7.4 H6.6 Z"/><path d="M6.3 7.9 H9.7 L10.3 10.7 H5.7 Z"/><path d="M5.4 11.2 H10.6 L11.4 15.5 H4.6 Z M8 12.4 A1.1 1.1 0 0 0 6.9 13.5 L6.9 15.5 L9.1 15.5 L9.1 13.5 A1.1 1.1 0 0 0 8 12.4 Z" fill-rule="evenodd"/><rect x="3.3" y="2.15" width="2.0" height="1.4" rx="0.7"/><rect x="10.7" y="2.15" width="2.0" height="1.4" rx="0.7"/></g></svg></div>
-      <div class="state-name">Light on the horizon</div>
-      <div class="state-range">50 – 75%</div>
-      <code class="state-file">pharos-caution-symbolic.svg</code>
-    </div>
-    <div class="state">
-      <div class="state-icon" style="color:#E07B39;"><svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 16 16"><g fill="currentColor"><path d="M8 0.4 C8.9 1.5 9.5 2.2 9.5 3.1 A1.5 1.5 0 0 1 6.5 3.1 C6.5 2.2 7.1 1.5 8 0.4 Z"/><path d="M6.6 5.2 H9.4 V7.4 H6.6 Z"/><path d="M6.3 7.9 H9.7 L10.3 10.7 H5.7 Z"/><path d="M5.4 11.2 H10.6 L11.4 15.5 H4.6 Z M8 12.4 A1.1 1.1 0 0 0 6.9 13.5 L6.9 15.5 L9.1 15.5 L9.1 13.5 A1.1 1.1 0 0 0 8 12.4 Z" fill-rule="evenodd"/><rect x="1.9" y="2.15" width="3.4" height="1.4" rx="0.7"/><rect x="10.7" y="2.15" width="3.4" height="1.4" rx="0.7"/><rect x="1.1" y="4.6" width="2.6" height="1.3" rx="0.65" transform="rotate(14 2.4 5.25)"/><rect x="12.3" y="4.6" width="2.6" height="1.3" rx="0.65" transform="rotate(-14 13.6 5.25)"/></g></svg></div>
-      <div class="state-name">Full beam</div>
-      <div class="state-range">75 – 90%</div>
-      <code class="state-file">pharos-warning-symbolic.svg</code>
-    </div>
-    <div class="state">
-      <div class="state-icon" style="color:#D64541;"><svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 16 16"><defs><mask id="m"><rect width="64" height="64" fill="#fff"/><circle cx="12.1" cy="12.1" r="5.1" fill="#000"/></mask></defs><g fill="currentColor" mask="url(#m)"><path d="M8 0.4 C8.9 1.5 9.5 2.2 9.5 3.1 A1.5 1.5 0 0 1 6.5 3.1 C6.5 2.2 7.1 1.5 8 0.4 Z"/><path d="M6.6 5.2 H9.4 V7.4 H6.6 Z"/><path d="M6.3 7.9 H9.7 L10.3 10.7 H5.7 Z"/><path d="M5.4 11.2 H10.6 L11.4 15.5 H4.6 Z M8 12.4 A1.1 1.1 0 0 0 6.9 13.5 L6.9 15.5 L9.1 15.5 L9.1 13.5 A1.1 1.1 0 0 0 8 12.4 Z" fill-rule="evenodd"/><rect x="1.9" y="2.15" width="3.4" height="1.4" rx="0.7"/><rect x="10.7" y="2.15" width="3.4" height="1.4" rx="0.7"/><rect x="1.1" y="4.6" width="2.6" height="1.3" rx="0.65" transform="rotate(14 2.4 5.25)"/><rect x="12.3" y="4.6" width="2.6" height="1.3" rx="0.65" transform="rotate(-14 13.6 5.25)"/></g><path fill="currentColor" fill-rule="evenodd" d="M12.1 8.1 A4 4 0 1 1 12.099 8.1 Z M11.4 9.5 L11.63 12.4 L12.57 12.4 L12.8 9.5 Z M12.1 13.3 A0.9 0.9 0 1 0 12.101 13.3 Z"/></svg></div>
-      <div class="state-name">On the rocks</div>
-      <div class="state-range">&ge; 90%</div>
-      <code class="state-file">pharos-critical-symbolic.svg</code>
-    </div></div>
+  <section id="install">
+    <h2>Install</h2>
+    <p class="req">Needs GNOME Shell 46, 47 or 48, and
+    <a href="https://claude.com/claude-code">Claude Code</a> signed in on this
+    machine — Pharos reads the sign-in Claude Code already has.</p>
+    <ol class="steps">
+      <li>
+        <b>Copy Pharos into place</b>
+        <p>Open a terminal and paste this — it downloads Pharos and puts it where
+        GNOME looks for extensions.</p>
+        <pre><button class="copy" data-copy>Copy</button><code>git clone https://github.com/aymenkrifa/Pharos.git
+cd Pharos
+glib-compile-schemas schemas/
+EXT=~/.local/share/gnome-shell/extensions/pharos@aymenkrifa.github.io
+mkdir -p "$EXT"
+cp -r extension.js prefs.js lib metadata.json stylesheet.css schemas assets "$EXT/"</code></pre>
+      </li>
+      <li>
+        <b>Reload GNOME Shell</b>
+        <p>On <b>X11</b>: press <code>Alt&#8202;+&#8202;F2</code>, type <code>r</code>, press Enter.<br>
+        On <b>Wayland</b>: log out and back in.</p>
+      </li>
+      <li>
+        <b>Light the beacon</b>
+        <p>Turn Pharos on — once is enough:</p>
+        <pre><button class="copy" data-copy>Copy</button><code>gnome-extensions enable pharos@aymenkrifa.github.io</code></pre>
+        <p>…or flip the switch in the Extensions app. The tower appears in your
+        top panel right away.</p>
+      </li>
+    </ol>
   </section>
 
-  <section>
-    <div class="eyebrow">Lockups</div>
-    <h2>On night and on stone</h2>
-    <div class="lockups">
-      <div class="card dark"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 810 230" width="810" height="230"><g transform="translate(20,20) scale(0.37109375)"><defs>
-  <clipPath id="field"><rect x="0" y="0" width="512" height="512" rx="112"/></clipPath>
-  <linearGradient id="beamL" x1="1" y1="0" x2="0" y2="0">
-    <stop offset="0" stop-color="#F2A93B" stop-opacity="0.55"/><stop offset="1" stop-color="#F2A93B" stop-opacity="0"/>
-  </linearGradient>
-  <linearGradient id="beamR" x1="0" y1="0" x2="1" y2="0">
-    <stop offset="0" stop-color="#F2A93B" stop-opacity="0.55"/><stop offset="1" stop-color="#F2A93B" stop-opacity="0"/>
-  </linearGradient>
-  <radialGradient id="halo" cx="0.5" cy="0.5" r="0.5">
-    <stop offset="0" stop-color="#FFD98E" stop-opacity="0.85"/><stop offset="1" stop-color="#FFD98E" stop-opacity="0"/>
-  </radialGradient>
-</defs><g clip-path="url(#field)"><rect x="0" y="0" width="512" height="512" fill="#16233F"/><rect x="0" y="420.0" width="512" height="512" fill="#22375C"/><path d="M 46 444.0 L 70 408.0 L 88 426.0 L 106 402.0 L 128 444.0 Z" fill="#0C1426"/><path d="M 384 444.0 L 406 414.0 L 422 430.0 L 444 406.0 L 466 444.0 Z" fill="#0C1426"/><path d="M -20 442.0 q 14 -12 28 0 M 8 442.0 q 14 -12 28 0 M 36 442.0 q 14 -12 28 0 M 64 442.0 q 14 -12 28 0 M 92 442.0 q 14 -12 28 0 M 120 442.0 q 14 -12 28 0 M 148 442.0 q 14 -12 28 0 M 176 442.0 q 14 -12 28 0 M 204 442.0 q 14 -12 28 0 M 232 442.0 q 14 -12 28 0 M 260 442.0 q 14 -12 28 0 M 288 442.0 q 14 -12 28 0 M 316 442.0 q 14 -12 28 0 M 344 442.0 q 14 -12 28 0 M 372 442.0 q 14 -12 28 0 M 400 442.0 q 14 -12 28 0 M 428 442.0 q 14 -12 28 0 M 456 442.0 q 14 -12 28 0 M 484 442.0 q 14 -12 28 0 M 512 442.0 q 14 -12 28 0" stroke="#3D5A8A" stroke-width="4" fill="none" opacity="0.9" stroke-linecap="round"/><path d="M -6 464.0 q 14 -12 28 0 M 22 464.0 q 14 -12 28 0 M 50 464.0 q 14 -12 28 0 M 78 464.0 q 14 -12 28 0 M 106 464.0 q 14 -12 28 0 M 134 464.0 q 14 -12 28 0 M 162 464.0 q 14 -12 28 0 M 190 464.0 q 14 -12 28 0 M 218 464.0 q 14 -12 28 0 M 246 464.0 q 14 -12 28 0 M 274 464.0 q 14 -12 28 0 M 302 464.0 q 14 -12 28 0 M 330 464.0 q 14 -12 28 0 M 358 464.0 q 14 -12 28 0 M 386 464.0 q 14 -12 28 0 M 414 464.0 q 14 -12 28 0 M 442 464.0 q 14 -12 28 0 M 470 464.0 q 14 -12 28 0 M 498 464.0 q 14 -12 28 0 M 526 464.0 q 14 -12 28 0" stroke="#3D5A8A" stroke-width="4" fill="none" opacity="0.55" stroke-linecap="round"/><path d="M -20 486.0 q 14 -12 28 0 M 8 486.0 q 14 -12 28 0 M 36 486.0 q 14 -12 28 0 M 64 486.0 q 14 -12 28 0 M 92 486.0 q 14 -12 28 0 M 120 486.0 q 14 -12 28 0 M 148 486.0 q 14 -12 28 0 M 176 486.0 q 14 -12 28 0 M 204 486.0 q 14 -12 28 0 M 232 486.0 q 14 -12 28 0 M 260 486.0 q 14 -12 28 0 M 288 486.0 q 14 -12 28 0 M 316 486.0 q 14 -12 28 0 M 344 486.0 q 14 -12 28 0 M 372 486.0 q 14 -12 28 0 M 400 486.0 q 14 -12 28 0 M 428 486.0 q 14 -12 28 0 M 456 486.0 q 14 -12 28 0 M 484 486.0 q 14 -12 28 0 M 512 486.0 q 14 -12 28 0" stroke="#3D5A8A" stroke-width="4" fill="none" opacity="0.3" stroke-linecap="round"/><circle cx="96" cy="108" r="3" fill="#EAE0C8" opacity="0.55"/><circle cx="416" cy="84" r="2.4" fill="#EAE0C8" opacity="0.55"/><circle cx="388" cy="168" r="2" fill="#EAE0C8" opacity="0.55"/><circle cx="76" cy="196" r="2" fill="#EAE0C8" opacity="0.55"/><path d="M 250.0 90.0 L 0 106.0 L 0 166.0 L 250.0 112.0 Z" fill="url(#beamL)"/><path d="M 262.0 90.0 L 512 106.0 L 512 166.0 L 262.0 112.0 Z" fill="url(#beamR)"/><circle cx="256.0" cy="98.0" r="54" fill="url(#halo)"/><g transform="translate(86.0,108.0) scale(1.0)"><rect x="52" y="330" width="236" height="22" fill="#EAE0C8"/><rect x="52" y="330" width="118" height="22" fill="#C9B48C"/><rect x="52" y="352" width="236" height="3" fill="#A88F66" opacity="0.55"/><path d="M 84 322 L 104 180 L 170 180 L 170 322 Z" fill="#C9B48C"/><path d="M 170 322 L 170 180 L 236 180 L 256 322 Z" fill="#EAE0C8"/><rect x="96" y="170" width="148" height="10" fill="#EAE0C8"/><rect x="96" y="170" width="74" height="10" fill="#C9B48C"/><rect x="96" y="180" width="148" height="3" fill="#A88F66" opacity="0.55"/><path d="M 100 170 L 108 154 L 116 170 Z" fill="#C9B48C"/><path d="M 224 170 L 232 154 L 240 170 Z" fill="#EAE0C8"/><path d="M 156 322 L 156 296 A 14 14 0 0 1 184 296 L 184 322 Z" fill="#0F1930"/><path d="M 126 160 L 136 88 L 170 88 L 170 160 Z" fill="#C9B48C"/><path d="M 170 160 L 170 88 L 204 88 L 214 160 Z" fill="#EAE0C8"/><path d="M 148 160 L 145 88 M 192 160 L 195 88" stroke="#A88F66" stroke-width="2.5" opacity="0.45" fill="none"/><rect x="130" y="78" width="80" height="10" fill="#EAE0C8"/><rect x="130" y="78" width="40" height="10" fill="#C9B48C"/><rect x="130" y="88" width="80" height="3" fill="#A88F66" opacity="0.55"/><path d="M 152 68 L 154 26 L 170 26 L 170 68 Z" fill="#C9B48C"/><path d="M 170 68 L 170 26 L 186 26 L 188 68 Z" fill="#EAE0C8"/><rect x="158" y="34" width="5" height="18" rx="2.5" fill="#0F1930"/><rect x="168" y="34" width="5" height="18" rx="2.5" fill="#0F1930"/><rect x="178" y="34" width="5" height="18" rx="2.5" fill="#0F1930"/><rect x="146" y="16" width="48" height="10" fill="#EAE0C8"/><rect x="146" y="16" width="24" height="10" fill="#C9B48C"/><rect x="146" y="26" width="48" height="3" fill="#A88F66" opacity="0.55"/><path d="M 170 -34 C 178 -22 184 -14 184 -3 A 14 14 0 0 1 156 -3 C 156 -14 162 -22 170 -34 Z" fill="#F2A93B"/>
-<path d="M 170 -18 C 174 -12 177 -8 177 -2 A 7 7 0 0 1 163 -2 C 163 -8 166 -12 170 -18 Z" fill="#FFD98E"/></g></g></g><g transform="translate(256,156.3)" fill="#EAE0C8"><path transform="translate(0.00,0) scale(0.057617,-0.057617)" d="M354 635Q452 617 533.5 631.5Q615 646 673.5 693.5Q732 741 764.5 822.0Q797 903 797 1020Q797 1101 780.0 1167.5Q763 1234 729.5 1280.5Q696 1327 645.0 1352.5Q594 1378 526 1378Q483 1378 451.0 1374.5Q419 1371 397 1367Q371 1362 354 1356ZM143 1434Q163 1432 185 1430Q204 1428 227.5 1427.5Q251 1427 276 1427Q315 1427 381.5 1436.5Q448 1446 551 1446Q647 1446 728.5 1418.0Q810 1390 870.0 1336.0Q930 1282 963.5 1204.5Q997 1127 997 1028Q997 895 944.0 798.0Q891 701 802.0 641.0Q713 581 597.0 559.5Q481 538 354 557V391Q354 306 356.5 242.5Q359 179 362.5 133.0Q366 87 371.5 56.0Q377 25 383 4V0H143V4Q149 25 154.5 56.0Q160 87 164.0 133.0Q168 179 170.0 242.5Q172 306 172 391V1042Q172 1127 170.0 1190.5Q168 1254 164.0 1300.5Q160 1347 154.5 1378.0Q149 1409 143 1430Z"/><path transform="translate(77.44,0) scale(0.057617,-0.057617)" d="M1135 686Q1095 687 1035.0 687.5Q975 688 904.5 689.0Q834 690 757.5 690.5Q681 691 608.0 691.5Q535 692 469.0 691.0Q403 690 354 688V391Q354 306 356.5 242.5Q359 179 362.5 133.0Q366 87 371.5 56.0Q377 25 383 4V0H143V4Q149 25 154.5 56.0Q160 87 164.0 133.0Q168 179 170.0 242.5Q172 306 172 391V1042Q172 1127 170.0 1190.5Q168 1254 164.0 1300.5Q160 1347 154.5 1378.0Q149 1409 143 1430V1434H383V1430Q377 1409 371.5 1378.0Q366 1347 362.5 1300.5Q359 1254 356.5 1190.5Q354 1127 354 1042V786Q406 784 472.0 783.5Q538 783 610.0 783.5Q682 784 756.5 785.0Q831 786 900.5 787.5Q970 789 1030.5 791.0Q1091 793 1135 795V1042Q1135 1127 1132.5 1190.5Q1130 1254 1126.5 1300.5Q1123 1347 1117.5 1378.0Q1112 1409 1106 1430V1434H1346V1430Q1340 1409 1334.5 1378.0Q1329 1347 1325.0 1300.5Q1321 1254 1319.0 1190.5Q1317 1127 1317 1042V391Q1317 306 1319.0 242.5Q1321 179 1325.0 133.0Q1329 87 1334.5 56.0Q1340 25 1346 4V0H1106V4Q1112 25 1117.5 56.0Q1123 87 1126.5 133.0Q1130 179 1132.5 242.5Q1135 306 1135 391Z"/><path transform="translate(180.23,0) scale(0.057617,-0.057617)" d="M1135 0V4Q1137 9 1138.0 19.0Q1139 29 1139 37Q1139 68 1130.5 105.5Q1122 143 1098 199L977 471Q921 473 828.0 473.0Q735 473 627 473Q548 473 474.5 473.0Q401 473 342 471L227 207Q212 170 195.0 126.0Q178 82 178 37Q178 24 180.0 15.5Q182 7 184 4V0H-20V4Q-2 23 25.0 71.5Q52 120 84 193L657 1464H737L1280 242Q1299 199 1319.5 158.5Q1340 118 1358.0 86.0Q1376 54 1390.0 32.0Q1404 10 1409 4V0ZM487 559Q545 559 606.0 559.5Q667 560 725.5 560.5Q784 561 838.0 561.5Q892 562 936 563L655 1198L379 559Z"/><path transform="translate(277.26,0) scale(0.057617,-0.057617)" d="M354 391Q354 306 356.5 242.5Q359 179 362.5 133.0Q366 87 371.5 56.0Q377 25 383 4V0H143V4Q149 25 154.5 56.0Q160 87 163.5 133.0Q167 179 169.5 242.0Q172 305 172 391V1042Q172 1127 169.5 1190.5Q167 1254 163.5 1300.0Q160 1346 154.5 1377.5Q149 1409 143 1430V1434L185 1430Q204 1428 227.5 1427.5Q251 1427 276 1427Q315 1427 381.5 1436.5Q448 1446 551 1446Q647 1446 728.5 1420.0Q810 1394 870.0 1344.0Q930 1294 963.5 1221.5Q997 1149 997 1057Q997 985 978.5 923.5Q960 862 926.5 812.0Q893 762 846.0 723.5Q799 685 741 659L1092 166Q1118 129 1140.5 102.0Q1163 75 1183.5 55.5Q1204 36 1223.0 23.5Q1242 11 1262 4V0H973Q970 19 953.5 50.5Q937 82 915 113L561 612Q538 610 515.0 608.5Q492 607 468 607Q440 607 411.5 609.0Q383 611 354 616ZM354 694Q381 688 409.0 685.5Q437 683 463 683Q538 683 600.0 705.5Q662 728 705.5 774.0Q749 820 773.0 888.5Q797 957 797 1049Q797 1124 780.0 1185.0Q763 1246 729.5 1288.5Q696 1331 645.0 1354.5Q594 1378 526 1378Q457 1378 416.0 1371.0Q375 1364 354 1356Z"/><path transform="translate(363.98,0) scale(0.057617,-0.057617)" d="M797 1458Q964 1458 1105.5 1403.5Q1247 1349 1350.0 1250.5Q1453 1152 1511.0 1014.0Q1569 876 1569 709Q1569 614 1547.0 522.0Q1525 430 1482.5 348.0Q1440 266 1378.0 196.5Q1316 127 1236.5 76.5Q1157 26 1061.0 -2.5Q965 -31 854 -31Q687 -31 545.5 22.5Q404 76 301.0 174.0Q198 272 140.0 409.5Q82 547 82 715Q82 810 104.0 902.0Q126 994 168.5 1077.0Q211 1160 272.5 1229.5Q334 1299 413.5 1350.0Q493 1401 589.5 1429.5Q686 1458 797 1458ZM854 59Q965 59 1057.0 99.0Q1149 139 1215.5 215.0Q1282 291 1319.0 400.5Q1356 510 1356 649Q1356 803 1320.5 934.5Q1285 1066 1215.0 1162.5Q1145 1259 1040.5 1313.5Q936 1368 797 1368Q686 1368 594.0 1328.5Q502 1289 435.5 1214.0Q369 1139 332.0 1030.0Q295 921 295 782Q295 629 330.0 496.5Q365 364 435.0 267.0Q505 170 610.0 114.5Q715 59 854 59Z"/><path transform="translate(476.11,0) scale(0.057617,-0.057617)" d="M741 1206H719Q711 1229 693.5 1258.0Q676 1287 647.5 1312.5Q619 1338 578.5 1355.0Q538 1372 483 1372Q434 1372 396.0 1357.0Q358 1342 332.5 1315.0Q307 1288 294.0 1251.0Q281 1214 281 1169Q281 1097 321.5 1031.5Q362 966 423.0 902.0Q484 838 555.0 774.0Q626 710 687.0 641.0Q748 572 788.5 496.5Q829 421 829 334Q829 269 806.5 203.5Q784 138 737.0 86.0Q690 34 616.0 1.5Q542 -31 440 -31Q383 -31 331.5 -20.5Q280 -10 236.5 5.5Q193 21 158.5 39.0Q124 57 102 72L125 293H150Q161 246 186.0 203.5Q211 161 247.5 128.5Q284 96 331.0 76.5Q378 57 434 57Q485 57 525.5 72.5Q566 88 595.0 115.5Q624 143 639.5 181.0Q655 219 655 264Q655 327 632.0 380.5Q609 434 571.5 482.0Q534 530 486.5 575.0Q439 620 389.0 665.5Q339 711 291.5 759.0Q244 807 206.5 861.5Q169 916 146.0 978.5Q123 1041 123 1116Q123 1195 153.5 1258.5Q184 1322 234.5 1367.0Q285 1412 349.0 1436.0Q413 1460 481 1460Q531 1460 573.0 1452.0Q615 1444 648.5 1433.0Q682 1422 707.0 1411.0Q732 1400 748 1393Z"/></g></svg></div>
-      <div class="card light"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 810 230" width="810" height="230"><g transform="translate(20,20) scale(0.37109375)"><defs>
-  <clipPath id="field"><rect x="0" y="0" width="512" height="512" rx="112"/></clipPath>
-  <linearGradient id="beamL" x1="1" y1="0" x2="0" y2="0">
-    <stop offset="0" stop-color="#F2A93B" stop-opacity="0.55"/><stop offset="1" stop-color="#F2A93B" stop-opacity="0"/>
-  </linearGradient>
-  <linearGradient id="beamR" x1="0" y1="0" x2="1" y2="0">
-    <stop offset="0" stop-color="#F2A93B" stop-opacity="0.55"/><stop offset="1" stop-color="#F2A93B" stop-opacity="0"/>
-  </linearGradient>
-  <radialGradient id="halo" cx="0.5" cy="0.5" r="0.5">
-    <stop offset="0" stop-color="#FFD98E" stop-opacity="0.85"/><stop offset="1" stop-color="#FFD98E" stop-opacity="0"/>
-  </radialGradient>
-</defs><g clip-path="url(#field)"><rect x="0" y="0" width="512" height="512" fill="#16233F"/><rect x="0" y="420.0" width="512" height="512" fill="#22375C"/><path d="M 46 444.0 L 70 408.0 L 88 426.0 L 106 402.0 L 128 444.0 Z" fill="#0C1426"/><path d="M 384 444.0 L 406 414.0 L 422 430.0 L 444 406.0 L 466 444.0 Z" fill="#0C1426"/><path d="M -20 442.0 q 14 -12 28 0 M 8 442.0 q 14 -12 28 0 M 36 442.0 q 14 -12 28 0 M 64 442.0 q 14 -12 28 0 M 92 442.0 q 14 -12 28 0 M 120 442.0 q 14 -12 28 0 M 148 442.0 q 14 -12 28 0 M 176 442.0 q 14 -12 28 0 M 204 442.0 q 14 -12 28 0 M 232 442.0 q 14 -12 28 0 M 260 442.0 q 14 -12 28 0 M 288 442.0 q 14 -12 28 0 M 316 442.0 q 14 -12 28 0 M 344 442.0 q 14 -12 28 0 M 372 442.0 q 14 -12 28 0 M 400 442.0 q 14 -12 28 0 M 428 442.0 q 14 -12 28 0 M 456 442.0 q 14 -12 28 0 M 484 442.0 q 14 -12 28 0 M 512 442.0 q 14 -12 28 0" stroke="#3D5A8A" stroke-width="4" fill="none" opacity="0.9" stroke-linecap="round"/><path d="M -6 464.0 q 14 -12 28 0 M 22 464.0 q 14 -12 28 0 M 50 464.0 q 14 -12 28 0 M 78 464.0 q 14 -12 28 0 M 106 464.0 q 14 -12 28 0 M 134 464.0 q 14 -12 28 0 M 162 464.0 q 14 -12 28 0 M 190 464.0 q 14 -12 28 0 M 218 464.0 q 14 -12 28 0 M 246 464.0 q 14 -12 28 0 M 274 464.0 q 14 -12 28 0 M 302 464.0 q 14 -12 28 0 M 330 464.0 q 14 -12 28 0 M 358 464.0 q 14 -12 28 0 M 386 464.0 q 14 -12 28 0 M 414 464.0 q 14 -12 28 0 M 442 464.0 q 14 -12 28 0 M 470 464.0 q 14 -12 28 0 M 498 464.0 q 14 -12 28 0 M 526 464.0 q 14 -12 28 0" stroke="#3D5A8A" stroke-width="4" fill="none" opacity="0.55" stroke-linecap="round"/><path d="M -20 486.0 q 14 -12 28 0 M 8 486.0 q 14 -12 28 0 M 36 486.0 q 14 -12 28 0 M 64 486.0 q 14 -12 28 0 M 92 486.0 q 14 -12 28 0 M 120 486.0 q 14 -12 28 0 M 148 486.0 q 14 -12 28 0 M 176 486.0 q 14 -12 28 0 M 204 486.0 q 14 -12 28 0 M 232 486.0 q 14 -12 28 0 M 260 486.0 q 14 -12 28 0 M 288 486.0 q 14 -12 28 0 M 316 486.0 q 14 -12 28 0 M 344 486.0 q 14 -12 28 0 M 372 486.0 q 14 -12 28 0 M 400 486.0 q 14 -12 28 0 M 428 486.0 q 14 -12 28 0 M 456 486.0 q 14 -12 28 0 M 484 486.0 q 14 -12 28 0 M 512 486.0 q 14 -12 28 0" stroke="#3D5A8A" stroke-width="4" fill="none" opacity="0.3" stroke-linecap="round"/><circle cx="96" cy="108" r="3" fill="#EAE0C8" opacity="0.55"/><circle cx="416" cy="84" r="2.4" fill="#EAE0C8" opacity="0.55"/><circle cx="388" cy="168" r="2" fill="#EAE0C8" opacity="0.55"/><circle cx="76" cy="196" r="2" fill="#EAE0C8" opacity="0.55"/><path d="M 250.0 90.0 L 0 106.0 L 0 166.0 L 250.0 112.0 Z" fill="url(#beamL)"/><path d="M 262.0 90.0 L 512 106.0 L 512 166.0 L 262.0 112.0 Z" fill="url(#beamR)"/><circle cx="256.0" cy="98.0" r="54" fill="url(#halo)"/><g transform="translate(86.0,108.0) scale(1.0)"><rect x="52" y="330" width="236" height="22" fill="#EAE0C8"/><rect x="52" y="330" width="118" height="22" fill="#C9B48C"/><rect x="52" y="352" width="236" height="3" fill="#A88F66" opacity="0.55"/><path d="M 84 322 L 104 180 L 170 180 L 170 322 Z" fill="#C9B48C"/><path d="M 170 322 L 170 180 L 236 180 L 256 322 Z" fill="#EAE0C8"/><rect x="96" y="170" width="148" height="10" fill="#EAE0C8"/><rect x="96" y="170" width="74" height="10" fill="#C9B48C"/><rect x="96" y="180" width="148" height="3" fill="#A88F66" opacity="0.55"/><path d="M 100 170 L 108 154 L 116 170 Z" fill="#C9B48C"/><path d="M 224 170 L 232 154 L 240 170 Z" fill="#EAE0C8"/><path d="M 156 322 L 156 296 A 14 14 0 0 1 184 296 L 184 322 Z" fill="#0F1930"/><path d="M 126 160 L 136 88 L 170 88 L 170 160 Z" fill="#C9B48C"/><path d="M 170 160 L 170 88 L 204 88 L 214 160 Z" fill="#EAE0C8"/><path d="M 148 160 L 145 88 M 192 160 L 195 88" stroke="#A88F66" stroke-width="2.5" opacity="0.45" fill="none"/><rect x="130" y="78" width="80" height="10" fill="#EAE0C8"/><rect x="130" y="78" width="40" height="10" fill="#C9B48C"/><rect x="130" y="88" width="80" height="3" fill="#A88F66" opacity="0.55"/><path d="M 152 68 L 154 26 L 170 26 L 170 68 Z" fill="#C9B48C"/><path d="M 170 68 L 170 26 L 186 26 L 188 68 Z" fill="#EAE0C8"/><rect x="158" y="34" width="5" height="18" rx="2.5" fill="#0F1930"/><rect x="168" y="34" width="5" height="18" rx="2.5" fill="#0F1930"/><rect x="178" y="34" width="5" height="18" rx="2.5" fill="#0F1930"/><rect x="146" y="16" width="48" height="10" fill="#EAE0C8"/><rect x="146" y="16" width="24" height="10" fill="#C9B48C"/><rect x="146" y="26" width="48" height="3" fill="#A88F66" opacity="0.55"/><path d="M 170 -34 C 178 -22 184 -14 184 -3 A 14 14 0 0 1 156 -3 C 156 -14 162 -22 170 -34 Z" fill="#F2A93B"/>
-<path d="M 170 -18 C 174 -12 177 -8 177 -2 A 7 7 0 0 1 163 -2 C 163 -8 166 -12 170 -18 Z" fill="#FFD98E"/></g></g></g><g transform="translate(256,156.3)" fill="#1E2B47"><path transform="translate(0.00,0) scale(0.057617,-0.057617)" d="M354 635Q452 617 533.5 631.5Q615 646 673.5 693.5Q732 741 764.5 822.0Q797 903 797 1020Q797 1101 780.0 1167.5Q763 1234 729.5 1280.5Q696 1327 645.0 1352.5Q594 1378 526 1378Q483 1378 451.0 1374.5Q419 1371 397 1367Q371 1362 354 1356ZM143 1434Q163 1432 185 1430Q204 1428 227.5 1427.5Q251 1427 276 1427Q315 1427 381.5 1436.5Q448 1446 551 1446Q647 1446 728.5 1418.0Q810 1390 870.0 1336.0Q930 1282 963.5 1204.5Q997 1127 997 1028Q997 895 944.0 798.0Q891 701 802.0 641.0Q713 581 597.0 559.5Q481 538 354 557V391Q354 306 356.5 242.5Q359 179 362.5 133.0Q366 87 371.5 56.0Q377 25 383 4V0H143V4Q149 25 154.5 56.0Q160 87 164.0 133.0Q168 179 170.0 242.5Q172 306 172 391V1042Q172 1127 170.0 1190.5Q168 1254 164.0 1300.5Q160 1347 154.5 1378.0Q149 1409 143 1430Z"/><path transform="translate(77.44,0) scale(0.057617,-0.057617)" d="M1135 686Q1095 687 1035.0 687.5Q975 688 904.5 689.0Q834 690 757.5 690.5Q681 691 608.0 691.5Q535 692 469.0 691.0Q403 690 354 688V391Q354 306 356.5 242.5Q359 179 362.5 133.0Q366 87 371.5 56.0Q377 25 383 4V0H143V4Q149 25 154.5 56.0Q160 87 164.0 133.0Q168 179 170.0 242.5Q172 306 172 391V1042Q172 1127 170.0 1190.5Q168 1254 164.0 1300.5Q160 1347 154.5 1378.0Q149 1409 143 1430V1434H383V1430Q377 1409 371.5 1378.0Q366 1347 362.5 1300.5Q359 1254 356.5 1190.5Q354 1127 354 1042V786Q406 784 472.0 783.5Q538 783 610.0 783.5Q682 784 756.5 785.0Q831 786 900.5 787.5Q970 789 1030.5 791.0Q1091 793 1135 795V1042Q1135 1127 1132.5 1190.5Q1130 1254 1126.5 1300.5Q1123 1347 1117.5 1378.0Q1112 1409 1106 1430V1434H1346V1430Q1340 1409 1334.5 1378.0Q1329 1347 1325.0 1300.5Q1321 1254 1319.0 1190.5Q1317 1127 1317 1042V391Q1317 306 1319.0 242.5Q1321 179 1325.0 133.0Q1329 87 1334.5 56.0Q1340 25 1346 4V0H1106V4Q1112 25 1117.5 56.0Q1123 87 1126.5 133.0Q1130 179 1132.5 242.5Q1135 306 1135 391Z"/><path transform="translate(180.23,0) scale(0.057617,-0.057617)" d="M1135 0V4Q1137 9 1138.0 19.0Q1139 29 1139 37Q1139 68 1130.5 105.5Q1122 143 1098 199L977 471Q921 473 828.0 473.0Q735 473 627 473Q548 473 474.5 473.0Q401 473 342 471L227 207Q212 170 195.0 126.0Q178 82 178 37Q178 24 180.0 15.5Q182 7 184 4V0H-20V4Q-2 23 25.0 71.5Q52 120 84 193L657 1464H737L1280 242Q1299 199 1319.5 158.5Q1340 118 1358.0 86.0Q1376 54 1390.0 32.0Q1404 10 1409 4V0ZM487 559Q545 559 606.0 559.5Q667 560 725.5 560.5Q784 561 838.0 561.5Q892 562 936 563L655 1198L379 559Z"/><path transform="translate(277.26,0) scale(0.057617,-0.057617)" d="M354 391Q354 306 356.5 242.5Q359 179 362.5 133.0Q366 87 371.5 56.0Q377 25 383 4V0H143V4Q149 25 154.5 56.0Q160 87 163.5 133.0Q167 179 169.5 242.0Q172 305 172 391V1042Q172 1127 169.5 1190.5Q167 1254 163.5 1300.0Q160 1346 154.5 1377.5Q149 1409 143 1430V1434L185 1430Q204 1428 227.5 1427.5Q251 1427 276 1427Q315 1427 381.5 1436.5Q448 1446 551 1446Q647 1446 728.5 1420.0Q810 1394 870.0 1344.0Q930 1294 963.5 1221.5Q997 1149 997 1057Q997 985 978.5 923.5Q960 862 926.5 812.0Q893 762 846.0 723.5Q799 685 741 659L1092 166Q1118 129 1140.5 102.0Q1163 75 1183.5 55.5Q1204 36 1223.0 23.5Q1242 11 1262 4V0H973Q970 19 953.5 50.5Q937 82 915 113L561 612Q538 610 515.0 608.5Q492 607 468 607Q440 607 411.5 609.0Q383 611 354 616ZM354 694Q381 688 409.0 685.5Q437 683 463 683Q538 683 600.0 705.5Q662 728 705.5 774.0Q749 820 773.0 888.5Q797 957 797 1049Q797 1124 780.0 1185.0Q763 1246 729.5 1288.5Q696 1331 645.0 1354.5Q594 1378 526 1378Q457 1378 416.0 1371.0Q375 1364 354 1356Z"/><path transform="translate(363.98,0) scale(0.057617,-0.057617)" d="M797 1458Q964 1458 1105.5 1403.5Q1247 1349 1350.0 1250.5Q1453 1152 1511.0 1014.0Q1569 876 1569 709Q1569 614 1547.0 522.0Q1525 430 1482.5 348.0Q1440 266 1378.0 196.5Q1316 127 1236.5 76.5Q1157 26 1061.0 -2.5Q965 -31 854 -31Q687 -31 545.5 22.5Q404 76 301.0 174.0Q198 272 140.0 409.5Q82 547 82 715Q82 810 104.0 902.0Q126 994 168.5 1077.0Q211 1160 272.5 1229.5Q334 1299 413.5 1350.0Q493 1401 589.5 1429.5Q686 1458 797 1458ZM854 59Q965 59 1057.0 99.0Q1149 139 1215.5 215.0Q1282 291 1319.0 400.5Q1356 510 1356 649Q1356 803 1320.5 934.5Q1285 1066 1215.0 1162.5Q1145 1259 1040.5 1313.5Q936 1368 797 1368Q686 1368 594.0 1328.5Q502 1289 435.5 1214.0Q369 1139 332.0 1030.0Q295 921 295 782Q295 629 330.0 496.5Q365 364 435.0 267.0Q505 170 610.0 114.5Q715 59 854 59Z"/><path transform="translate(476.11,0) scale(0.057617,-0.057617)" d="M741 1206H719Q711 1229 693.5 1258.0Q676 1287 647.5 1312.5Q619 1338 578.5 1355.0Q538 1372 483 1372Q434 1372 396.0 1357.0Q358 1342 332.5 1315.0Q307 1288 294.0 1251.0Q281 1214 281 1169Q281 1097 321.5 1031.5Q362 966 423.0 902.0Q484 838 555.0 774.0Q626 710 687.0 641.0Q748 572 788.5 496.5Q829 421 829 334Q829 269 806.5 203.5Q784 138 737.0 86.0Q690 34 616.0 1.5Q542 -31 440 -31Q383 -31 331.5 -20.5Q280 -10 236.5 5.5Q193 21 158.5 39.0Q124 57 102 72L125 293H150Q161 246 186.0 203.5Q211 161 247.5 128.5Q284 96 331.0 76.5Q378 57 434 57Q485 57 525.5 72.5Q566 88 595.0 115.5Q624 143 639.5 181.0Q655 219 655 264Q655 327 632.0 380.5Q609 434 571.5 482.0Q534 530 486.5 575.0Q439 620 389.0 665.5Q339 711 291.5 759.0Q244 807 206.5 861.5Q169 916 146.0 978.5Q123 1041 123 1116Q123 1195 153.5 1258.5Q184 1322 234.5 1367.0Q285 1412 349.0 1436.0Q413 1460 481 1460Q531 1460 573.0 1452.0Q615 1444 648.5 1433.0Q682 1422 707.0 1411.0Q732 1400 748 1393Z"/></g></svg></div>
+  <section id="accounts">
+    <h2>More than one account</h2>
+    <p class="lede">Work and personal? Open <b>Settings → Accounts</b> from the Pharos
+    menu and add each one — a label and the path to its credentials file. The menu
+    grows a switcher, and the panel shows which account you're watching (full name,
+    a single letter, or nothing — your choice).</p>
+    <p style="margin-top:14px;">One account needs no setup at all: Pharos finds
+    Claude Code's standard sign-in on its own and keeps it fresh.</p>
+  </section>
+
+  <section id="privacy">
+    <h2>Good to know</h2>
+    <p class="lede">Pharos reads Claude Code's sign-in from your home folder and talks
+    only to Anthropic's own usage endpoint. Nothing about your usage leaves your
+    machine for anywhere else. It's free software, GPL-2.0-or-later — the source is
+    a short read.</p>
+    <div class="note">
+      <b>If the menu ever says "Run Claude Code to re-auth"</b> — your stored sign-in
+      has fully expired. Open Claude Code, sign in once, and Pharos carries on at the
+      next refresh.
     </div>
   </section>
 
-  <section>
-    <div class="eyebrow">Foundations</div>
-    <h2>Type &amp; palette</h2>
-    <div class="type-specimen">
-      <div class="display">PHAROS</div>
-      <div class="caption">Marcellus, single weight — a face drawn from Roman inscriptional capitals. Track it wide, set it in caps.</div>
-    </div>
-    <div class="chips"><div class="chip"><span class="swatch" style="background:#16233F"></span><code>#16233F</code><span>Alexandrian night</span></div><div class="chip"><span class="swatch" style="background:#EAE0C8"></span><code>#EAE0C8</code><span>Limestone</span></div><div class="chip"><span class="swatch" style="background:#C9B48C"></span><code>#C9B48C</code><span>Limestone, shaded</span></div><div class="chip"><span class="swatch" style="background:#F2A93B"></span><code>#F2A93B</code><span>Beacon gold</span></div><div class="chip"><span class="swatch" style="background:#E07B39"></span><code>#E07B39</code><span>Ember</span></div><div class="chip"><span class="swatch" style="background:#D64541"></span><code>#D64541</code><span>The rocks</span></div><div class="chip"><span class="swatch" style="background:#22375C"></span><code>#22375C</code><span>Harbour sea</span></div></div>
-  </section>
+  <footer>
+    <p><a href="https://github.com/aymenkrifa/Pharos">Source on GitHub</a> ·
+       <a href="https://github.com/aymenkrifa/Pharos/blob/main/LICENSE">GPL-2.0-or-later</a></p>
+    <p>Pharos is an independent project, not affiliated with Anthropic.</p>
+    <p>Named for the Lighthouse of Alexandria.</p>
+  </footer>
 
-  <footer>Pharos — usage watch for Claude Code, and whatever sails after it.</footer>
 </main>
+<script>
+  for (const btn of document.querySelectorAll('button[data-copy]')) {
+    btn.addEventListener('click', async () => {
+      const code = btn.parentElement.querySelector('code');
+      try {
+        await navigator.clipboard.writeText(code.innerText);
+        btn.textContent = 'Copied';
+        setTimeout(() => { btn.textContent = 'Copy'; }, 1600);
+      } catch (_e) { /* clipboard unavailable; leave the button as-is */ }
+    });
+  }
+</script>
 </body>
 </html>
