@@ -3,14 +3,13 @@
     <source media="(prefers-color-scheme: dark)" srcset="assets/assets/pharos-logo-dark.svg">
     <img src="assets/assets/pharos-logo-light.svg" alt="Pharos" width="540">
   </picture>
+  <p><em>Your Claude 5-hour and 7-day usage limits, in the GNOME top panel.</em></p>
 </div>
 
 # Pharos
 
-A colored light on the horizon, before you run onto the rocks.
-
-Pharos shows your Claude **5-hour** and **7-day** usage limits in the GNOME
-top panel. As usage climbs, the beacon changes shape and color:
+A colored light on the horizon, before you run onto the rocks. As usage
+climbs, the beacon changes shape and color:
 
 | Beacon | Meaning |
 |:---:|---|
