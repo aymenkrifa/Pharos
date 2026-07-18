@@ -1,0 +1,13 @@
+{
+  "uuid": "pharos@aymenkrifa.github.io",
+  "name": "Pharos",
+  "description": "A light on the horizon for your Claude usage: shows the 5-hour and 7-day limits in the top panel and shifts color before you run onto the rocks. Supports multiple accounts.",
+  "url": "https://github.com/aymenkrifa/Pharos",
+  "shell-version": [
+    "46",
+    "47",
+    "48"
+  ],
+  "settings-schema": "org.gnome.shell.extensions.pharos",
+  "version": 3
+}

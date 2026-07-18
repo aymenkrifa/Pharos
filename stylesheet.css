@@ -1,0 +1,46 @@
+/* Menu-header lockup (810×230 source, kept wide enough for the wordmark to
+   stay legible). The url() is relative to this stylesheet (extension root). */
+.pharos-menu-logo {
+    background-image: url("assets/assets/pharos-logo-dark.svg");
+    background-size: contain;
+    width: 190px;
+    height: 54px;
+    margin: 4px 0;
+}
+
+.pharos-tag {
+    margin-left: 2px;
+    font-weight: bold;
+    font-size: 0.85em;
+}
+
+.pharos-meter {
+    spacing: 3px;
+}
+
+.pharos-meter-header {
+    spacing: 8px;
+}
+
+.pharos-pct {
+    font-weight: bold;
+    font-feature-settings: "tnum";
+}
+
+.pharos-reset {
+    font-size: 0.85em;
+    opacity: 0.7;
+    margin-top: 3px;
+}
+
+.pharos-bar-track {
+    background-color: rgba(127, 127, 127, 0.25);
+    border-radius: 4px;
+    height: 6px;
+    margin-top: 2px;
+}
+
+.pharos-bar-fill {
+    border-radius: 4px;
+    height: 6px;
+}

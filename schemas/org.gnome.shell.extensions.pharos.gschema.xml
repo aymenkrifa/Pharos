@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schemalist>
+  <schema id="org.gnome.shell.extensions.pharos"
+          path="/org/gnome/shell/extensions/pharos/">
+    <key name="accounts" type="as">
+      <default>[]</default>
+      <summary>Configured accounts</summary>
+      <description>One JSON-encoded {"label", "path"} entry per account. An
+      empty list means a single auto-detected account at
+      ~/.claude/.credentials.json with no switcher. A blank path on an entry
+      also falls back to that default location.</description>
+    </key>
+    <key name="active-account-index" type="i">
+      <default>0</default>
+      <range min="0" max="99"/>
+      <summary>Active account index</summary>
+      <description>Index into the accounts list of the account currently shown.</description>
+    </key>
+    <key name="panel-label-style" type="s">
+      <choices>
+        <choice value='full'/>
+        <choice value='short'/>
+        <choice value='none'/>
+      </choices>
+      <default>'full'</default>
+      <summary>Panel label style</summary>
+      <description>How the active account is labeled next to the panel icon in
+      multi-account mode: the full label, just its first letter, or hidden. The
+      menu switcher always shows full labels.</description>
+    </key>
+    <key name="refresh-seconds" type="i">
+      <default>300</default>
+      <range min="0" max="3600"/>
+      <summary>Background refresh interval (seconds)</summary>
+      <description>How often to poll the usage endpoint in the background so the
+      panel color stays current even while the menu is closed. Set to 0 to
+      disable background polling (usage is then fetched only when you open the
+      menu).</description>
+    </key>
+    <key name="caution-threshold" type="i">
+      <default>50</default>
+      <range min="1" max="100"/>
+      <summary>Caution threshold (%)</summary>
+      <description>Utilization at or above this shows the caution beacon
+      (light on the horizon, gold).</description>
+    </key>
+    <key name="warn-threshold" type="i">
+      <default>75</default>
+      <range min="1" max="100"/>
+      <summary>Warning threshold (%)</summary>
+      <description>Utilization at or above this shows the warning beacon
+      (full beam, ember).</description>
+    </key>
+    <key name="crit-threshold" type="i">
+      <default>90</default>
+      <range min="1" max="100"/>
+      <summary>Critical threshold (%)</summary>
+      <description>Utilization at or above this shows the critical beacon
+      (on the rocks, red).</description>
+    </key>
+  </schema>
+</schemalist>
