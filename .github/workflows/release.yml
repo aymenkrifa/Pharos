@@ -1,0 +1,34 @@
+name: Release
+
+on:
+  push:
+    tags: ['v*']
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install GLib tools
+        run: sudo apt-get update && sudo apt-get install -y --no-install-recommends libglib2.0-bin zip
+
+      - name: Build extension zip
+        run: |
+          glib-compile-schemas schemas/
+          mkdir build
+          cp -r extension.js prefs.js metadata.json stylesheet.css LICENSE lib assets schemas build/
+          (cd build && zip -qr "../pharos@aymenkrifa.github.io.shell-extension.zip" .)
+          unzip -l "pharos@aymenkrifa.github.io.shell-extension.zip"
+
+      - name: Create GitHub release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create "$GITHUB_REF_NAME" \
+            --title "Pharos $GITHUB_REF_NAME" \
+            --generate-notes \
+            "pharos@aymenkrifa.github.io.shell-extension.zip"
