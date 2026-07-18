@@ -65,3 +65,7 @@ once and reopen the menu.
 ## License
 
 GPL-2.0-or-later — see [LICENSE](LICENSE).
+
+---
+
+Made by [Aymen Krifa](https://aymenkrifa.com).
