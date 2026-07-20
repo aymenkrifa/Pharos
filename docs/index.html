@@ -113,6 +113,16 @@
   section > p { max-width: 640px; }
   .lede { margin-top: 14px; }
 
+  /* settings cards */
+  .opts { margin-top: 28px; display: grid; gap: 14px; }
+  .opt {
+    background: var(--card); border: 1px solid var(--line);
+    border-radius: 10px; padding: 16px 20px;
+  }
+  .opt b { font-family: 'Marcellus', Georgia, serif; font-weight: 400; letter-spacing: .05em; }
+  .opt p { margin-top: 6px; font-size: .95rem; }
+  .opt code { font: 12.5px/1.5 'JetBrains Mono', 'Fira Mono', monospace; }
+
   /* beacon states */
   .states { margin-top: 30px; display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
   @media (max-width: 640px) { .states { grid-template-columns: 1fr; } }
@@ -186,18 +196,19 @@
     <div class="panel-demo">
       <div class="bar" aria-label="Simulated GNOME top bar">
         <img src="pharos-state-caution.svg" alt="Pharos beacon, caution state">
-        <span>W&nbsp;64/32</span>
+        <span style="color:#cfd4dc">W&nbsp;&nbsp;<span style="color:var(--gold)">Session&nbsp;64%</span>&nbsp;&nbsp;Weekly&nbsp;32%</span>
       </div>
-      <p class="caption">64% of the 5-hour window, 32% of the 7-day — fetched a moment ago.</p>
+      <p class="caption">64% of the session window, 32% of the weekly — the number
+      past its threshold wears the caution gold.</p>
     </div>
   </div>
 
   <section id="beacon">
     <h2>Read the beacon</h2>
-    <p class="lede">The beacon watches both usage windows and always shows the one
-    closest to its limit. Both its shape and its color change, so the warning reads
-    even in grayscale. Open the menu for exact percentages and when each window
-    resets.</p>
+    <p class="lede">The beacon watches the limits you've chosen and always shows
+    the one closest to the rocks. Both its shape and its color change, so the
+    warning reads even in grayscale. Open the menu for exact percentages and
+    when each window resets.</p>
     <div class="states">
       <div class="state">
         <img class="only-dark" src="pharos-state-ok.svg" alt="Tower with flame, untinted">
@@ -254,6 +265,39 @@ gnome-extensions install pharos@aymenkrifa.github.io.shell-extension.zip</code><
         top panel right away.</p>
       </li>
     </ol>
+  </section>
+
+  <section id="settings">
+    <h2>Make it yours</h2>
+    <p class="lede">Every account reports its own set of limits — the 5-hour
+    session window, the weekly window, and on some plans extra per-model weekly
+    windows. Pharos discovers whatever your account has and lists it all in the
+    menu, with a small badge on the limit that's currently holding you back.
+    Settings (in the Pharos menu) decides what the panel itself shows.</p>
+    <div class="opts">
+      <div class="opt"><b>Panel metrics</b>
+        <p>Each limit gets two switches: <i>Show</i> puts its number in the
+        panel tag, <i>Tint</i> lets it color the beacon. Out of the box every
+        limit is shown and the beacon follows the worst one shown — the color
+        is always explained by a number you can see. Care only about the
+        session window, or only about one model? Show just that; the menu
+        keeps the full picture either way.</p>
+      </div>
+      <div class="opt"><b>Number style</b>
+        <p>Full names — <code>Session 10%&nbsp; Weekly 50%&nbsp; Fable 82%</code> —
+        are the default. Prefer it compact? Plain numbers
+        (<code>10/50/82</code>) or letter hints (<code>s10 w50 F82</code>).
+        In every style, each number wears the color of its own state.</p>
+      </div>
+      <div class="opt"><b>Thresholds</b>
+        <p>Where the beacon changes state — caution, full beam, on the rocks.
+        50&thinsp;/&thinsp;75&thinsp;/&thinsp;90 unless you say otherwise.</p>
+      </div>
+      <div class="opt"><b>Background refresh</b>
+        <p>How often Pharos checks between menu opens, so the beacon never goes
+        stale. Set it to 0 to fetch only when you open the menu.</p>
+      </div>
+    </div>
   </section>
 
   <section id="accounts">
