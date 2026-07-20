@@ -71,6 +71,15 @@
   }
   #theme-toggle:hover { border-color: var(--muted); }
 
+  #ver-badge {
+    position: fixed; top: 16px; left: 16px; z-index: 10;
+    padding: 9px 16px; border-radius: 10px;
+    border: 1px solid var(--line); background: var(--card); color: var(--muted);
+    font-family: 'Marcellus', Georgia, serif; font-size: .82rem;
+    letter-spacing: .06em; text-decoration: none; line-height: 1;
+  }
+  #ver-badge:hover { border-color: var(--muted); color: var(--text); text-decoration: none; }
+
   .hero { padding: 72px 0 48px; text-align: center;
           border-bottom: 1px solid var(--line); }
   .hero img.lockup { max-width: 560px; width: 100%; height: auto; }
@@ -158,6 +167,7 @@
 </style>
 </head>
 <body>
+<a id="ver-badge" href="https://github.com/aymenkrifa/Pharos/releases/latest" target="_blank" rel="noopener" aria-label="Latest release">v0.4</a>
 <button id="theme-toggle" aria-label="Switch between dark and light mode">☀</button>
 <main>
 
@@ -306,6 +316,18 @@ gnome-extensions install pharos@aymenkrifa.github.io.shell-extension.zip</code><
     paint();
   });
   mq.addEventListener('change', paint);
+
+  // Version badge: ships with the current version baked in (renders instantly,
+  // survives an offline / rate-limited API), then corrects itself from the
+  // GitHub releases API when reachable.
+  const ver = document.getElementById('ver-badge');
+  if (ver && window.fetch) {
+    fetch('https://api.github.com/repos/aymenkrifa/Pharos/releases/latest',
+          { headers: { 'Accept': 'application/vnd.github+json' } })
+      .then(r => r.ok ? r.json() : null)
+      .then(d => { if (d && d.tag_name) ver.textContent = d.tag_name; })
+      .catch(() => { /* keep the baked-in version */ });
+  }
 </script>
 </body>
 </html>
