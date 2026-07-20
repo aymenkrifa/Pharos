@@ -19,10 +19,6 @@ climbs, the beacon changes shape and color:
 | <img src="assets/assets/pharos-state-warning.svg" width="22" alt="full beam"> | **Full beam** — from 75% |
 | <img src="assets/assets/pharos-state-critical.svg" width="22" alt="on the rocks"> | **On the rocks** — from 90% |
 
-<div align="center">
-  <img src="docs/pharos-menu.png" alt="Pharos menu open, showing an account switcher and three limits — one critical, one warning, one clear" width="300">
-</div>
-
 ## Install
 
 Needs GNOME Shell 46–48 and
