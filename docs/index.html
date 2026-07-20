@@ -404,10 +404,40 @@ gnome-extensions install pharos@aymenkrifa.github.io.shell-extension.zip</code><
     <h2>More than one account</h2>
     <p class="lede">Work and personal? Open <b>Settings → Accounts</b> from the Pharos
     menu and add each one — a label and the path to its credentials file. The menu
-    grows a switcher, and the panel shows which account you're watching (full name,
-    a single letter, or nothing — your choice).</p>
+    grows a switcher, and the panel gets a label so you always know which
+    account you're watching.</p>
     <p style="margin-top:14px;">One account needs no setup at all: Pharos finds
     Claude Code's standard sign-in on its own and keeps it fresh.</p>
+    <div class="opts" style="margin-top:22px;">
+      <div class="opt"><b>Panel label</b>
+        <p>Choose how the active account's name sits next to the beacon: its
+        full label, just the first letter, or hidden entirely. The menu
+        switcher always spells it out in full either way.</p>
+        <div class="demos">
+          <div class="row">
+            <span class="lbl">Full label</span>
+            <div class="bar">
+              <img src="pharos-state-caution.svg" alt="Beacon, caution">
+              <span>Work&nbsp;&nbsp;<span style="color:var(--gold)">Session&nbsp;64%</span></span>
+            </div>
+          </div>
+          <div class="row">
+            <span class="lbl">First letter</span>
+            <div class="bar">
+              <img src="pharos-state-caution.svg" alt="Beacon, caution">
+              <span>W&nbsp;&nbsp;<span style="color:var(--gold)">Session&nbsp;64%</span></span>
+            </div>
+          </div>
+          <div class="row">
+            <span class="lbl">Hidden</span>
+            <div class="bar">
+              <img src="pharos-state-caution.svg" alt="Beacon, caution">
+              <span style="color:var(--gold)">Session&nbsp;64%</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   </section>
 
   <section id="privacy">
