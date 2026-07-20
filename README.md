@@ -53,37 +53,17 @@ Then reload and enable as above.
 
 </details>
 
-## Accounts
+## Features
 
-One account works out of the box — Pharos reads Claude Code's login from
-`~/.claude` and keeps the token fresh on its own.
+- **Multi-account** — track work and personal Claude accounts side by side,
+  with a switcher in the menu.
+- **Discovers your limits** — session, weekly, and per-model windows,
+  whatever your plan reports.
+- **Configurable panel** — pick which limits show a number, which color the
+  beacon, how the numbers are written, and the thresholds that trigger each
+  color.
 
-More than one account? Add each in **Settings → Accounts** with a label and
-the path to its `.credentials.json`. The menu gets a switcher, and the panel
-shows which account you're watching.
-
-If Pharos ever says *"Run Claude Code to re-auth"*, log in with Claude Code
-once and reopen the menu.
-
-## Settings
-
-Open **Settings…** from the Pharos menu.
-
-- **Panel metrics** — two switches per limit your account reports (session,
-  weekly, and per-model weekly windows on plans that have them): *Show* puts
-  its number in the panel tag, *Tint* lets it color the beacon. Default:
-  everything shown, beacon following the worst one. The menu always lists
-  every limit and badges the one currently limiting you.
-- **Number style** — how the panel tag is written: full names
-  (`Session 10%  Weekly 50%  Fable 82%`, the default), plain numbers
-  (`10/50/82`), or letter hints (`s10 w50 F82`). Every style still colors
-  each number on its own.
-- **Thresholds** — the percentages where the beacon steps up a state
-  (50 / 75 / 90 by default).
-- **Background refresh** — how often Pharos checks in the background so the
-  beacon stays current (`0` = only refresh when the menu is opened).
-- **Panel label** — show the active account as its full name, first letter,
-  or not at all.
+Full settings guide, with examples: **[pharos.aymenkrifa.com](https://pharos.aymenkrifa.com/#settings)**.
 
 ## License
 
