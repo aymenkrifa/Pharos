@@ -123,6 +123,21 @@
   .opt p { margin-top: 6px; font-size: .95rem; }
   .opt code { font: 12.5px/1.5 'JetBrains Mono', 'Fira Mono', monospace; }
 
+  /* miniatures of the top bar, one per settings card */
+  .demos { margin-top: 14px; display: grid; gap: 8px; }
+  .demos .row { display: grid; grid-template-columns: 134px 1fr; gap: 12px; align-items: center; }
+  @media (max-width: 560px) { .demos .row { grid-template-columns: 1fr; gap: 5px; } }
+  .demos .lbl { color: var(--muted); font-size: .82rem; font-style: italic; }
+  .demos .bar {
+    background: #0b0f18; border-radius: 6px; padding: 7px 12px;
+    display: flex; justify-content: flex-end; align-items: center; gap: 6px;
+    font: 12px/1 'Cantarell', 'Segoe UI', sans-serif; color: #cfd4dc;
+    border: 1px solid var(--line); overflow-x: auto;
+  }
+  /* the bars are dark chrome in both themes, so the icons never swap */
+  .demos .bar img { width: 14px; height: 14px; display: block; flex: none; }
+  .demos .bar span { white-space: nowrap; }
+
   /* beacon states */
   .states { margin-top: 30px; display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
   @media (max-width: 640px) { .states { grid-template-columns: 1fr; } }
@@ -282,20 +297,107 @@ gnome-extensions install pharos@aymenkrifa.github.io.shell-extension.zip</code><
         is always explained by a number you can see. Care only about the
         session window, or only about one model? Show just that; the menu
         keeps the full picture either way.</p>
+        <div class="demos">
+          <div class="row">
+            <span class="lbl">Everything shown</span>
+            <div class="bar">
+              <img src="pharos-state-critical.svg" alt="Beacon, on the rocks">
+              <span><span style="color:var(--gold)">Session&nbsp;64%</span>&nbsp;&nbsp;<span style="color:var(--rocks)">Weekly&nbsp;92%</span></span>
+            </div>
+          </div>
+          <div class="row">
+            <span class="lbl">Session only</span>
+            <div class="bar">
+              <img src="pharos-state-caution.svg" alt="Beacon, caution">
+              <span><span style="color:var(--gold)">Session&nbsp;64%</span></span>
+            </div>
+          </div>
+        </div>
       </div>
       <div class="opt"><b>Number style</b>
         <p>Full names — <code>Session 10%&nbsp; Weekly 50%&nbsp; Fable 82%</code> —
         are the default. Prefer it compact? Plain numbers
         (<code>10/50/82</code>) or letter hints (<code>s10 w50 F82</code>).
         In every style, each number wears the color of its own state.</p>
+        <div class="demos">
+          <div class="row">
+            <span class="lbl">Full names</span>
+            <div class="bar">
+              <img src="pharos-state-warning.svg" alt="Beacon, full beam">
+              <span>Session&nbsp;10%&nbsp;&nbsp;<span style="color:var(--gold)">Weekly&nbsp;50%</span>&nbsp;&nbsp;<span style="color:var(--ember)">Fable&nbsp;82%</span></span>
+            </div>
+          </div>
+          <div class="row">
+            <span class="lbl">Plain numbers</span>
+            <div class="bar">
+              <img src="pharos-state-warning.svg" alt="Beacon, full beam">
+              <span>10/<span style="color:var(--gold)">50</span>/<span style="color:var(--ember)">82</span></span>
+            </div>
+          </div>
+          <div class="row">
+            <span class="lbl">Letter hints</span>
+            <div class="bar">
+              <img src="pharos-state-warning.svg" alt="Beacon, full beam">
+              <span>s10 <span style="color:var(--gold)">w50</span> <span style="color:var(--ember)">F82</span></span>
+            </div>
+          </div>
+        </div>
       </div>
       <div class="opt"><b>Thresholds</b>
         <p>Where the beacon changes state — caution, full beam, on the rocks.
         50&thinsp;/&thinsp;75&thinsp;/&thinsp;90 unless you say otherwise.</p>
+        <div class="demos">
+          <div class="row">
+            <span class="lbl">Clear water</span>
+            <div class="bar">
+              <img src="pharos-state-ok.svg" alt="Beacon, clear water">
+              <span>Session&nbsp;42%</span>
+            </div>
+          </div>
+          <div class="row">
+            <span class="lbl">Caution, from 50</span>
+            <div class="bar">
+              <img src="pharos-state-caution.svg" alt="Beacon, caution">
+              <span style="color:var(--gold)">Session&nbsp;64%</span>
+            </div>
+          </div>
+          <div class="row">
+            <span class="lbl">Full beam, from 75</span>
+            <div class="bar">
+              <img src="pharos-state-warning.svg" alt="Beacon, full beam">
+              <span style="color:var(--ember)">Session&nbsp;82%</span>
+            </div>
+          </div>
+          <div class="row">
+            <span class="lbl">On the rocks, from 90</span>
+            <div class="bar">
+              <img src="pharos-state-critical.svg" alt="Beacon, on the rocks">
+              <span style="color:var(--rocks)">Session&nbsp;96%</span>
+            </div>
+          </div>
+        </div>
       </div>
       <div class="opt"><b>Background refresh</b>
         <p>How often Pharos checks between menu opens, so the beacon never goes
-        stale. Set it to 0 to fetch only when you open the menu.</p>
+        stale. Set it to 0 to fetch only when you open the menu. Once a reading
+        is more than a minute old the panel says so, in parentheses, so an old
+        number never passes for a current one.</p>
+        <div class="demos">
+          <div class="row">
+            <span class="lbl">Just refreshed</span>
+            <div class="bar">
+              <img src="pharos-state-caution.svg" alt="Beacon, caution">
+              <span style="color:var(--gold)">Session&nbsp;64%</span>
+            </div>
+          </div>
+          <div class="row">
+            <span class="lbl">Twelve minutes on</span>
+            <div class="bar">
+              <img src="pharos-state-caution.svg" alt="Beacon, caution">
+              <span><span style="color:var(--gold)">Session&nbsp;64%</span>&nbsp;(12m)</span>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </section>
