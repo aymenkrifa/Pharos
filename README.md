@@ -81,7 +81,7 @@ Open **Settings…** from the Pharos menu.
 - **Thresholds** — the percentages where the beacon steps up a state
   (50 / 75 / 90 by default).
 - **Background refresh** — how often Pharos checks in the background so the
-  beacon stays current (0 = only refresh when the menu is opened).
+  beacon stays current (`0` = only refresh when the menu is opened).
 - **Panel label** — show the active account as its full name, first letter,
   or not at all.
 
