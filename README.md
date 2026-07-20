@@ -19,6 +19,13 @@ climbs, the beacon changes shape and color:
 | <img src="assets/assets/pharos-state-warning.svg" width="22" alt="full beam"> | **Full beam** — from 75% |
 | <img src="assets/assets/pharos-state-critical.svg" width="22" alt="on the rocks"> | **On the rocks** — from 90% |
 
+Click the beacon and the whole picture opens — every window, its own color,
+and when each one resets:
+
+<div align="center">
+  <img src="docs/pharos-menu.png" alt="The Pharos panel tag and its open menu: an account switcher above Session at 82% in ember and badged 'limiting', Weekly at 58% in gold, and Weekly · Fable at 12% untinted" width="302">
+</div>
+
 ## Install
 
 Needs GNOME Shell 46–48 and

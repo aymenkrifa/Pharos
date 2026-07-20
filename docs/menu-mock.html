@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Pharos menu — illustration source</title>
+<!--
+  Source for docs/pharos-menu.png. This is a drawing of the menu, not a
+  screen capture: a real one would only ever show one account's usage at
+  one moment, and the states worth explaining (clear / caution / full beam)
+  rarely coincide. Measurements below are copied from stylesheet.css and
+  lib/meter.js so the drawing stays faithful — update them together.
+
+  Re-render after editing:
+    chromium --headless --hide-scrollbars --window-size=360,660 \
+      --force-device-scale-factor=2 --screenshot=pharos-menu.png menu-mock.html
+  then crop to the card with the trim step in the same commit's notes.
+-->
+<style>
+  * { box-sizing: border-box; margin: 0; }
+  body {
+    background: #1c1c1c;      /* stand-in for the desktop behind the panel */
+    padding: 14px;
+    font: 14px/1.35 'Cantarell', 'Ubuntu', 'DejaVu Sans', sans-serif;
+    color: #fff;
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap { width: 302px; }
+
+  /* the GNOME top bar strip, cropped to the Pharos indicator */
+  .topbar {
+    background: #000; border-radius: 7px 7px 0 0;
+    padding: 7px 12px; display: flex; align-items: center; gap: 7px;
+    justify-content: flex-end; font-size: 12.5px; font-weight: 700;
+    color: #dcdcdc;
+  }
+  .topbar img { width: 15px; height: 15px; display: block; }
+
+  /* the popover */
+  .menu {
+    background: #2c2c2c; border: 1px solid rgba(255,255,255,.09);
+    border-radius: 0 0 12px 12px; padding: 10px 0 6px;
+  }
+  .logo { display: block; width: 190px; height: 54px; margin: 4px auto 2px; }
+  .sep { height: 1px; background: rgba(255,255,255,.10); margin: 9px 12px; }
+
+  .row { padding: 6px 16px; font-size: 14px; }
+  .acct { display: flex; align-items: center; gap: 10px; }
+  .radio {
+    width: 15px; height: 15px; border-radius: 50%;
+    border: 1px solid rgba(255,255,255,.55); flex: none;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .radio i { width: 7px; height: 7px; border-radius: 50%; background: #fff; }
+  .acct.off { padding-left: 41px; }   /* aligns label with the radio rows */
+
+  /* one usage window — mirrors lib/meter.js */
+  .meter { padding: 5px 16px 7px; }
+  .mhead { display: flex; align-items: center; gap: 8px; }
+  .mname { color: #f2f2f2; }
+  .chip {
+    font-size: 9px; font-weight: 700; border-radius: 4px;
+    padding: 1px 5px; line-height: 1.5;
+  }
+  .mpct { margin-left: auto; font-weight: 700; font-variant-numeric: tabular-nums; }
+  .track {
+    width: 240px; height: 6px; border-radius: 4px; margin-top: 5px;
+    background: rgba(127,127,127,.25);
+  }
+  .fill { height: 6px; border-radius: 4px; }
+  .reset { font-size: 11.9px; opacity: .7; margin-top: 4px; }
+
+  .foot { padding: 5px 16px; font-size: 14px; }
+  .muted { color: rgba(255,255,255,.55); }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="topbar">
+    <img src="pharos-state-warning.svg" alt="">
+    <span>P&nbsp;&nbsp;<span style="color:#E07B39">Session&nbsp;82%</span>&nbsp;&nbsp;<span style="color:#E8B54A">Weekly&nbsp;58%</span>&nbsp;&nbsp;Fable&nbsp;12%</span>
+  </div>
+
+  <div class="menu">
+    <img class="logo" src="pharos-logo-dark.svg" alt="Pharos">
+    <div class="sep"></div>
+
+    <div class="row acct off">Work</div>
+    <div class="row acct"><span class="radio"><i></i></span>Personal</div>
+
+    <div class="meter">
+      <div class="mhead">
+        <span class="mname">Session</span>
+        <span class="chip" style="color:#E07B39;border:1px solid #E07B39">limiting</span>
+        <span class="mpct">82%</span>
+      </div>
+      <div class="track"><div class="fill" style="width:197px;background:#E07B39"></div></div>
+      <div class="reset">resets 16:19 · in 38m</div>
+    </div>
+
+    <div class="meter">
+      <div class="mhead">
+        <span class="mname">Weekly</span>
+        <span class="mpct">58%</span>
+      </div>
+      <div class="track"><div class="fill" style="width:139px;background:#E8B54A"></div></div>
+      <div class="reset">resets Jul 21 20:59 · in 1d 5h</div>
+    </div>
+
+    <div class="meter">
+      <div class="mhead">
+        <span class="mname">Weekly · Fable</span>
+        <span class="mpct">12%</span>
+      </div>
+      <div class="track"><div class="fill" style="width:29px;background:rgba(190,190,190,.8)"></div></div>
+      <div class="reset">resets Jul 21 20:59 · in 1d 5h</div>
+    </div>
+
+    <div class="sep"></div>
+    <div class="foot muted">Updated 16:01</div>
+    <div class="foot">Refresh now</div>
+    <div class="foot">Settings…</div>
+  </div>
+
+</div>
+</body>
+</html>
