@@ -69,19 +69,19 @@ once and reopen the menu.
 
 Open **Settings…** from the Pharos menu.
 
-- **Panel metrics** — every limit your account reports (the 5-hour session
-  window, the weekly window, and per-model weekly windows on plans that have
-  them) gets two switches: *Show* puts its number in the panel tag, *Tint*
-  lets it color the beacon. Default: everything shown, beacon following the
-  worst shown metric — so the color is always explained by a visible number.
-  The menu always lists every limit and badges the one currently limiting you.
+- **Panel metrics** — two switches per limit your account reports (session,
+  weekly, and per-model weekly windows on plans that have them): *Show* puts
+  its number in the panel tag, *Tint* lets it color the beacon. Default:
+  everything shown, beacon following the worst one. The menu always lists
+  every limit and badges the one currently limiting you.
 - **Number style** — how the panel tag is written: full names
   (`Session 10%  Weekly 50%  Fable 82%`, the default), plain numbers
-  (`10/50/82`), or letter hints (`s10 w50 F82`). In every style each number
-  is tinted by its own state.
-- **Thresholds** — where the beacon changes state (50 / 75 / 90 by default).
-- **Background refresh** — keeps the beacon current between menu opens
-  (0 = refresh only when the menu is opened).
+  (`10/50/82`), or letter hints (`s10 w50 F82`). Every style still colors
+  each number on its own.
+- **Thresholds** — the percentages where the beacon steps up a state
+  (50 / 75 / 90 by default).
+- **Background refresh** — how often Pharos checks in the background so the
+  beacon stays current (0 = only refresh when the menu is opened).
 - **Panel label** — show the active account as its full name, first letter,
   or not at all.
 
