@@ -3,7 +3,7 @@
     <source media="(prefers-color-scheme: dark)" srcset="assets/assets/pharos-logo-dark.svg">
     <img src="assets/assets/pharos-logo-light.svg" alt="Pharos" width="540">
   </picture>
-  <p><em>Your Claude 5-hour and 7-day usage limits, in the GNOME top panel.</em></p>
+  <p><em>Your Claude usage limits — session, weekly, per-model — in the GNOME top panel.</em></p>
   <p><a href="https://pharos.aymenkrifa.com"><b>pharos.aymenkrifa.com</b></a></p>
 </div>
 
@@ -67,9 +67,21 @@ once and reopen the menu.
 
 ## Settings
 
+Open **Settings…** from the Pharos menu.
+
+- **Panel metrics** — every limit your account reports (the 5-hour session
+  window, the weekly window, and per-model weekly windows on plans that have
+  them) gets two switches: *Show* puts its number in the panel tag, *Tint*
+  lets it color the beacon. Default: everything shown, beacon following the
+  worst shown metric — so the color is always explained by a visible number.
+  The menu always lists every limit and badges the one currently limiting you.
+- **Number style** — how the panel tag is written: full names
+  (`Session 10%  Weekly 50%  Fable 82%`, the default), plain numbers
+  (`10/50/82`), or letter hints (`s10 w50 F82`). In every style each number
+  is tinted by its own state.
+- **Thresholds** — where the beacon changes state (50 / 75 / 90 by default).
 - **Background refresh** — keeps the beacon current between menu opens
   (0 = refresh only when the menu is opened).
-- **Thresholds** — where the beacon changes state (50 / 75 / 90 by default).
 - **Panel label** — show the active account as its full name, first letter,
   or not at all.
 

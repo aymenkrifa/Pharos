@@ -28,6 +28,42 @@
       multi-account mode: the full label, just its first letter, or hidden. The
       menu switcher always shows full labels.</description>
     </key>
+    <key name="panel-metrics" type="as">
+      <default>['*']</default>
+      <summary>Limits shown in the panel tag</summary>
+      <description>Limit keys (e.g. 'session', 'weekly_all', 'weekly:Fable')
+      whose percentage appears in the panel tag. The special value '*' means
+      every limit the account has. An empty list hides all numbers.</description>
+    </key>
+    <key name="beacon-metrics" type="as">
+      <default>['*']</default>
+      <summary>Limits that drive the beacon color</summary>
+      <description>Limit keys whose utilization can change the beacon state
+      (icon shape and tint). The special value '*' means "follow
+      panel-metrics" — the beacon reflects the worst limit shown in the tag,
+      so the color is always explained by a visible number. An empty list
+      leaves the beacon untinted.</description>
+    </key>
+    <key name="metric-label-style" type="s">
+      <choices>
+        <choice value='none'/>
+        <choice value='letters'/>
+        <choice value='full'/>
+      </choices>
+      <default>'full'</default>
+      <summary>Panel number style</summary>
+      <description>How tag numbers are written: plain ('10/50/82'), with a
+      one-letter hint per limit ('s10 w50 F82'), or with full names
+      ('Session 10%  Weekly 50%  Fable 82%', spaced apart).</description>
+    </key>
+    <key name="known-limits" type="as">
+      <default>[]</default>
+      <summary>Limits seen on this installation (cache)</summary>
+      <description>One JSON-encoded {"key", "name", "letter"} entry per limit
+      the extension has ever seen in a usage response, across all accounts.
+      Written by the extension; the preferences dialog reads it to offer
+      per-limit toggles without doing its own fetching.</description>
+    </key>
     <key name="refresh-seconds" type="i">
       <default>300</default>
       <range min="0" max="3600"/>

@@ -53,6 +53,110 @@ export default class PharosPrefs extends ExtensionPreferences {
         settings.bind('crit-threshold', crit, 'value', Gio.SettingsBindFlags.DEFAULT);
         general.add(crit);
 
+        // Panel metrics: one row per limit this install has seen (the
+        // extension caches them in known-limits after each fetch — prefs
+        // never talks to the network). "Show" puts the number in the panel
+        // tag; "Tint" lets it drive the beacon color. Defaults: everything
+        // shown, tint following whatever is shown.
+        const metricsGroup = new Adw.PreferencesGroup({
+            title: 'Panel metrics',
+            description: 'Choose which limits show a number in the panel tag ' +
+                'and which may color the beacon. All limits always appear in ' +
+                'the menu.',
+        });
+        page.add(metricsGroup);
+
+        const NUM_STYLES = ['none', 'letters', 'full'];
+        const numStyle = new Adw.ComboRow({
+            title: 'Number style',
+            subtitle: 'Plain: 10/50 — Letter hints: s10 w50 — ' +
+                'Full names: Session 10%  Weekly 50%',
+            model: Gtk.StringList.new(
+                ['Plain numbers', 'Letter hints', 'Full names']),
+            selected: Math.max(0, NUM_STYLES.indexOf(
+                settings.get_string('metric-label-style'))),
+        });
+        numStyle.connect('notify::selected', () => {
+            settings.set_string('metric-label-style', NUM_STYLES[numStyle.selected]);
+        });
+        metricsGroup.add(numStyle);
+
+        const knownLimits = () => settings.get_strv('known-limits')
+            .map(s => {
+                try {
+                    return JSON.parse(s);
+                } catch (_e) {
+                    return null;
+                }
+            })
+            .filter(info => info?.key && info?.name);
+
+        // Materialize a '*' selection into explicit keys so a single toggle
+        // yields a concrete list. Beacon's '*' means "follow the shown set".
+        const effectiveSel = (sel, allKeys, star) =>
+            sel.includes('*') ? [...star] : sel.filter(k => allKeys.includes(k));
+
+        const metricRows = [];
+        const rebuildMetrics = () => {
+            for (const row of metricRows)
+                metricsGroup.remove(row);
+            metricRows.length = 0;
+
+            const limits = knownLimits();
+            if (limits.length === 0) {
+                const row = new Adw.ActionRow({
+                    title: 'No limits discovered yet',
+                    subtitle: 'Open the panel menu once to fetch usage',
+                });
+                metricsGroup.add(row);
+                metricRows.push(row);
+                return;
+            }
+
+            const allKeys = limits.map(info => info.key);
+            const shown = effectiveSel(
+                settings.get_strv('panel-metrics'), allKeys, allKeys);
+            const tinted = effectiveSel(
+                settings.get_strv('beacon-metrics'), allKeys, shown);
+
+            const write = (key, current, limitKey, active) => {
+                const next = current.filter(k => k !== limitKey);
+                if (active)
+                    next.push(limitKey);
+                // Keep a stable order matching the limit list.
+                settings.set_strv(key, allKeys.filter(k => next.includes(k)));
+                rebuildMetrics();
+            };
+
+            for (const info of limits) {
+                const row = new Adw.ActionRow({ title: info.name });
+                const show = new Gtk.CheckButton({
+                    label: 'Show',
+                    active: shown.includes(info.key),
+                    valign: Gtk.Align.CENTER,
+                });
+                const tint = new Gtk.CheckButton({
+                    label: 'Tint',
+                    active: tinted.includes(info.key),
+                    valign: Gtk.Align.CENTER,
+                });
+                show.connect('toggled', () =>
+                    write('panel-metrics', shown, info.key, show.active));
+                tint.connect('toggled', () =>
+                    write('beacon-metrics', tinted, info.key, tint.active));
+                row.add_suffix(show);
+                row.add_suffix(tint);
+                metricsGroup.add(row);
+                metricRows.push(row);
+            }
+        };
+        rebuildMetrics();
+
+        // Refresh the rows live if the extension discovers a new limit while
+        // this dialog is open.
+        const knownChangedId = settings.connect('changed::known-limits', rebuildMetrics);
+        window.connect('close-request', () => settings.disconnect(knownChangedId));
+
         // Accounts: none configured = a single auto-detected ~/.claude account
         // and no switcher in the panel menu.
         const accountsGroup = new Adw.PreferencesGroup({
