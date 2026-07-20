@@ -10,10 +10,15 @@
   rarely coincide. Measurements below are copied from stylesheet.css and
   lib/meter.js so the drawing stays faithful — update them together.
 
-  Re-render after editing:
-    chromium --headless --hide-scrollbars --window-size=360,660 \
-      --force-device-scale-factor=2 --screenshot=pharos-menu.png menu-mock.html
-  then crop to the card with the trim step in the same commit's notes.
+  Re-render after editing — both sizes, then trim each to the card. The 1x
+  is what the README shows (GitHub markdown can't pick by density, and a
+  downscaled 2x reads blurry on ordinary displays); the site serves either
+  via srcset.
+
+    chromium --headless --hide-scrollbars --window-size=360,700 \
+      --screenshot=pharos-menu.png menu-mock.html
+    chromium --headless --hide-scrollbars --window-size=360,700 \
+      --force-device-scale-factor=2 --screenshot=pharos-menu@2x.png menu-mock.html
 -->
 <style>
   * { box-sizing: border-box; margin: 0; }
