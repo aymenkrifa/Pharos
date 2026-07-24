@@ -260,6 +260,38 @@ export default class PharosPrefs extends ExtensionPreferences {
             rebuild();
         });
 
+        // Privacy: the trust story, and the one switch that narrows what
+        // Pharos is allowed to do.
+        const privacyGroup = new Adw.PreferencesGroup({
+            title: 'Privacy',
+            description: 'Pharos only ever talks to two Anthropic endpoints: ' +
+                'the usage endpoint, and — with renewal on — the same sign-in ' +
+                'renewal Claude Code uses.',
+        });
+        page.add(privacyGroup);
+
+        const renew = new Adw.SwitchRow({
+            title: 'Renew the sign-in automatically',
+            subtitle: 'Off = read-only mode: Pharos never calls the sign-in ' +
+                'endpoint and never writes to disk. When the sign-in expires, ' +
+                'usage pauses until you next use Claude Code.',
+        });
+        settings.bind('auto-renew-signin', renew, 'active', Gio.SettingsBindFlags.DEFAULT);
+        privacyGroup.add(renew);
+
+        // Trust pointer: reassure in place, link to the fuller explainer.
+        const privacy = new Adw.ActionRow({
+            title: 'Your data stays yours',
+            subtitle: 'Runs on this machine, talks only to Anthropic, ' +
+                'stores nothing new. Read how →',
+            activatable: true,
+        });
+        privacy.add_prefix(new Gtk.Image({ icon_name: 'channel-secure-symbolic' }));
+        privacy.add_suffix(new Gtk.Image({ icon_name: 'adw-external-link-symbolic' }));
+        privacy.connect('activated', () =>
+            Gtk.show_uri(window, 'https://pharos.aymenkrifa.com/#privacy', 0));
+        privacyGroup.add(privacy);
+
         // About
         const about = new Adw.PreferencesGroup({ title: 'About' });
 
