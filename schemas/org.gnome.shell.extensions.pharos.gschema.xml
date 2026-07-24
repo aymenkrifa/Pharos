@@ -64,6 +64,17 @@
       Written by the extension; the preferences dialog reads it to offer
       per-limit toggles without doing its own fetching.</description>
     </key>
+    <key name="auto-renew-signin" type="b">
+      <default>true</default>
+      <summary>Renew the sign-in automatically</summary>
+      <description>When true, Pharos renews an expired access token itself with
+      the stored refresh token (one POST to Anthropic's token endpoint, the same
+      flow Claude Code uses) and saves the rotated tokens back to the
+      credentials file so Claude Code stays in sync. When false, Pharos is
+      strictly read-only: it never calls the token endpoint and never writes a
+      byte to disk — when the token expires, usage pauses until Claude Code
+      next renews it.</description>
+    </key>
     <key name="refresh-seconds" type="i">
       <default>300</default>
       <range min="0" max="3600"/>

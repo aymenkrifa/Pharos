@@ -87,6 +87,9 @@
   .hero img.lockup { max-width: 560px; width: 100%; height: auto; }
   .hero p.tag { margin-top: 22px; color: var(--muted); font-style: italic; font-size: 1.1rem; }
   .hero p.what { margin: 14px auto 0; max-width: 560px; }
+  .hero p.assure { margin: 12px auto 0; max-width: 560px; color: var(--muted); font-size: .9rem; }
+  .hero p.assure a { color: var(--muted); text-decoration: underline; text-underline-offset: 2px; }
+  .hero p.assure a:hover { color: var(--text); }
   .cta { margin-top: 30px; display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
   .cta a {
     display: inline-block; padding: 11px 26px; border-radius: 8px;
@@ -215,6 +218,8 @@
     <p class="tag">A colored light on the horizon, before you run onto the rocks.</p>
     <p class="what">Pharos keeps your Claude usage limits in view — quietly, from the
     GNOME top panel — so you're never surprised by "limit reached" mid-thought.</p>
+    <p class="assure">Runs entirely on your machine — no Pharos server, no account,
+    and nothing about your usage leaves your computer. <a href="#privacy">How your data is handled</a>.</p>
     <div class="cta">
       <a class="primary" href="#install">Install</a>
       <a class="ghost" href="https://github.com/aymenkrifa/Pharos" target="_blank" rel="noopener">GitHub</a>
@@ -458,16 +463,56 @@ gnome-extensions install pharos@aymenkrifa.github.io.shell-extension.zip</code><
   </section>
 
   <section id="privacy">
-    <h2>Good to know</h2>
-    <p class="lede">Pharos reads Claude Code's sign-in from your home folder and talks
-    only to Anthropic's own servers — the usage endpoint, and the same sign-in
-    renewal Claude Code itself uses. Nothing about your usage leaves your machine
-    for anywhere else. It's free software, GPL-2.0-or-later — the source is a
-    short read.</p>
+    <h2>Your data stays yours</h2>
+    <p class="lede">Pharos runs entirely on your machine. It reuses the sign-in
+    Claude Code already saved, asks Anthropic for your usage numbers, and shows
+    them in the panel. That's the whole story — no Pharos server, no account to
+    create, nothing to opt out of.</p>
+    <div class="opts">
+      <div class="opt"><b>Two URLs, both Anthropic's — check for yourself</b>
+        <p>Pharos's entire network layer is one short file with exactly two
+        addresses declared at the top:
+        <code>api.anthropic.com/api/oauth/usage</code> (your numbers) and
+        <code>platform.claude.com/v1/oauth/token</code> (sign-in renewal — the
+        same endpoint Claude Code uses). No middle-man server, no analytics, no
+        third-party anything. Don't take our word for it —
+        <a href="https://github.com/aymenkrifa/Pharos/blob/main/lib/client.js"
+        target="_blank" rel="noopener">read the file</a>; it's two hundred
+        lines.</p>
+      </div>
+      <div class="opt"><b>Your password never touches Pharos</b>
+        <p>Pharos never handles your login — it reads the token Claude Code saved
+        after <i>you</i> signed in with Anthropic. It couldn't see your password
+        if it tried.</p>
+      </div>
+      <div class="opt"><b>Only a token, only on this computer</b>
+        <p>The one thing Pharos reads is that same token, in the same place
+        (<code>~/.claude</code>), which only your user account can open. And to
+        be fully upfront about the one write it does: when Pharos renews the
+        sign-in, it saves the renewed token back to that same file — same
+        place, same permissions — so Claude Code stays signed in too. No new
+        secret store, no copy sent anywhere.</p>
+      </div>
+      <div class="opt"><b>Usage numbers, nothing else</b>
+        <p>Pharos calls a single usage endpoint — percentages and reset times. It
+        has no access to your conversations or anything you send to Claude.</p>
+      </div>
+      <div class="opt"><b>Read-only mode, if you'd rather</b>
+        <p>Prefer that Pharos never renew or write anything at all? Turn off
+        <i>Renew the sign-in automatically</i> in Settings. Pharos then only
+        ever performs the read-only usage request — no token endpoint, not a
+        byte written to disk. The trade-off: when the sign-in expires, the
+        panel waits until you next use Claude Code.</p>
+      </div>
+    </div>
+    <p style="margin-top:18px; color:var(--muted); font-size:.95rem;">
+    And it's free software, GPL-2.0-or-later — every line is
+    <a href="https://github.com/aymenkrifa/Pharos" target="_blank" rel="noopener">on
+    GitHub</a> to read for yourself.</p>
     <div class="note">
-      <b>If the menu ever says "Run Claude Code to re-auth"</b> — your stored sign-in
-      has fully expired. Open Claude Code, sign in once, and Pharos carries on at the
-      next refresh.
+      <b>If the menu ever says "Sign-in expired"</b> — your saved sign-in has
+      fully expired (or read-only mode is on and it lapsed). Open Claude Code,
+      sign in once, and Pharos carries on at the next refresh.
     </div>
   </section>
 
