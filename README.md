@@ -40,12 +40,16 @@ curl -LO https://github.com/aymenkrifa/Pharos/releases/latest/download/pharos@ay
 gnome-extensions install pharos@aymenkrifa.github.io.shell-extension.zip
 ```
 
-Reload GNOME Shell (X11: `Alt+F2`, `r`, `Enter` — Wayland: log out and back
-in), then:
+Reload GNOME Shell by logging out and back in, then:
 
 ```sh
 gnome-extensions enable pharos@aymenkrifa.github.io
 ```
+
+The reload comes first: GNOME Shell only scans for extensions at startup, so
+enabling one it hasn't seen yet does nothing at all — silently. On X11 you can
+skip the logout and press `Alt+F2`, `r`, `Enter` instead; Wayland has no
+in-place restart, because there the shell *is* the display server.
 
 <details>
 <summary>Install from source instead</summary>

@@ -291,12 +291,17 @@ gnome-extensions install pharos@aymenkrifa.github.io.shell-extension.zip</code><
       </li>
       <li>
         <b>Reload GNOME Shell</b>
-        <p>On <b>X11</b>: press <code>Alt&#8202;+&#8202;F2</code>, type <code>r</code>, press Enter.<br>
-        On <b>Wayland</b>: log out and back in.</p>
+        <p>Log out and back in. That works whichever session you are running.</p>
+        <p>On <b>X11</b> you can skip the logout: press
+        <code>Alt&#8202;+&#8202;F2</code>, type <code>r</code>, press Enter.
+        <b>Wayland</b> has no in-place restart — there the shell is the display
+        server itself, so a logout is the only way.</p>
       </li>
       <li>
         <b>Light the beacon</b>
-        <p>Turn Pharos on — once is enough:</p>
+        <p>Turn Pharos on — once is enough. Do it <em>after</em> the reload:
+        GNOME Shell only scans for extensions at startup, so enabling one it
+        has not seen yet does nothing at all, without an error.</p>
         <div class="codeblock"><button class="copy" data-copy>Copy</button><pre><code>gnome-extensions enable pharos@aymenkrifa.github.io</code></pre></div>
         <p>…or flip the switch in the Extensions app. The tower appears in your
         top panel right away.</p>
