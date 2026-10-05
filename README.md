@@ -28,7 +28,7 @@ and when each one resets:
 
 ## Install
 
-Needs GNOME Shell 46–48 and
+Needs GNOME Shell 46–50 (Ubuntu 24.04 through 26.04) and
 [Claude Code](https://claude.com/product/claude-code) signed in on your
 machine.
 

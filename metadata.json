@@ -6,8 +6,10 @@
   "shell-version": [
     "46",
     "47",
-    "48"
+    "48",
+    "49",
+    "50"
   ],
   "settings-schema": "org.gnome.shell.extensions.pharos",
-  "version": 5
+  "version": 6
 }
